@@ -1,0 +1,89 @@
+{% extends 'unilmsapp/base.html' %}
+{% load static %}
+
+{% block title %}My Courses{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-danger">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="container-fluid py-4">
+
+    <div class="row">
+
+        <!-- MAIN CONTENT -->
+        <div class="col-lg-12 px-4">
+
+            <!-- SEARCH BAR -->
+            <div class="mb-4">
+                <form class="d-flex rounded-4 bg-light p-2" style="max-width: 600px;">
+                    <i class="fa-solid fa-magnifying-glass me-2 mt-2 text-muted"></i>
+                    <input class="form-control border-0 bg-light" type="search"
+                        placeholder="Search courses, lessons...">
+                </form>
+            </div>
+
+            <!-- TITLE -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h3 class="fw-bold">My Courses</h3>
+                <button class="btn btn-light border rounded-pill px-3">
+                    <i class="fa-solid fa-filter"></i> All Courses
+                </button>
+            </div>
+
+            <p class="text-muted mb-4">
+                Continue your learning journey by accessing your enrolled courses.
+            </p>
+
+            <!-- EMPTY STATE -->
+            {% if not subjects %}
+            <p class="text-muted">You have not enrolled in any courses yet.</p>
+            {% endif %}
+
+            <!-- CARDS GRID -->
+            <div class="row">
+
+                {% for sub in subjects %}
+                <div class="col-md-6 col-lg-4 mb-4">
+
+                    <div class="card shadow-sm rounded-4 h-100">
+
+                        <!-- TOP COLOR SECTION -->
+                        <div style="height: 120px; background: {{ sub.colour }}; border-radius: 16px 16px 0 0;"></div>
+
+
+                        <!-- CARD BODY -->
+                        <div class="card-body">
+
+                            <h5 class="fw-bold"> {{ sub.sub_name }}</h5>
+
+                            <p class="text-muted mb-3">
+                                {{ sub.faculty.name }}
+                            </p>
+
+                            <a href="{% url 'course_detail' sub.sub_code%}" class="btn btn-outline-dark rounded-pill px-3">
+                                Go to Course →
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

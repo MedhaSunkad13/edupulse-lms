@@ -1,0 +1,77 @@
+{% extends 'unilmsapp/base.html' %}
+{% load static %}
+
+{% block title %}Course Details{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="row">
+        <div class="col-lg-12 px-4">
+
+            <!-- SUBJECT HEADER -->
+            <div class="p-4 rounded-4 mb-4 text-white" style="background: {{ subject.colour }};">
+
+                <h2 class="fw-bold">{{ subject.sub_name }}</h2>
+                <p class="mb-0">Faculty: {{ subject.faculty.name }}</p>
+
+            </div>
+
+            <!-- TITLE -->
+            <h4 class="fw-bold mb-3">Course Materials</h4>
+
+            <!-- EMPTY STATE -->
+            {% if not materials %}
+            <p class="text-muted">No materials available for this course yet.</p>
+            {% endif %}
+
+            <!-- MATERIALS LIST -->
+            <div class="row">
+
+                {% for m in materials %}
+                <div class="col-md-6 col-lg-4 mb-4">
+
+                    <div class="card shadow-sm rounded-4 h-100">
+
+                        <div class="card-body">
+
+                            <!-- TITLE -->
+                            <h5 class="fw-bold mb-2">{{ m.title }}</h5>
+
+                            <!-- DATE -->
+                            <p class="text-muted mb-3">
+                                {{ m.date }}
+                            </p>
+
+                            <!-- WATCH BUTTON -->
+                            {%if m.video_url%}
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{{ m.video_url }}" target="_blank" class="btn btn-primary rounded-pill px-3">
+                                    Watch <i class="fa-solid fa-play"></i>
+                                </a>
+                                {%endif%}
+
+                                <!-- Download PDF -->
+                                {%if m.notes %}
+                                <a href="{{m.notes.url}}" target="_blank" class="btn btn-success rounded-pill px-3">
+                                    Download Notes <i class="fa-solid fa-download"></i>
+                                </a>
+                            </div>
+                            {%endif%}
+
+                        </div>
+
+                    </div>
+
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
