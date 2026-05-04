@@ -1,0 +1,88 @@
+{% extends 'unilmsapp/base.html' %}
+{% load static %}
+
+{% block title %}Submit Assignment{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-danger">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+
+            <div class="card shadow-lg rounded-4 border-0">
+
+                <!-- HEADER -->
+                <div class="card-header rounded-top-4" style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+                    <h4 class="mb-0 fw-bold text-center" style="color: #000;">
+                        Submit Project
+                    </h4>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="card-body p-4">
+
+                    <!-- Assignment Info -->
+                    <h5 class="fw-bold mb-2">{{ project.title }}</h5>
+
+                    <p class="text-muted mb-1">
+                        <i class="fa-solid fa-calendar me-1"></i>
+                        Deadline: {{ project.deadline }}
+                    </p>
+
+                    <p class="text-muted mb-4">
+                        <i class="fa-solid fa-file-lines me-1"></i>
+                        {{ project.description|default:"No description available" }}
+                    </p>
+
+                    <!-- FORM -->
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- File Upload -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                Upload your file
+                            </label>
+                            <input type="file" name="file" class="form-control" accept=".zip" required>
+                            <small class="text-muted">
+                                Accepted formats: ZIP only
+                            </small>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between">
+
+                            <a href="{% url 'course_detail' project.sub.sub_code %}"
+                                class="btn btn-light border rounded-pill px-4">
+                                ← Back
+                            </a>
+
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                                Submit <i class="fa-solid fa-upload ms-1"></i>
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

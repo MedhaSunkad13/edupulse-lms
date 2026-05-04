@@ -7,5 +7,7 @@ urlpatterns = [
     # path('dashboard/', TemplateView.as_view(template_name='unilmsapp/dashboard.html'), name='dashboard'),
     path('student/dashboard/', views.student_dashboard, name='student_dashboard'),
     path('student/courses/', views.my_courses, name='my_courses'),
-    path('course/details/<str:sc>/', views.course_detail, name='course_detail')
+    path('course/details/<str:sc>/', views.course_detail, name='course_detail'),
+    path('assignment/<int:id>/submit/',views.submit_assignment, name='submit_assignment'),
+    path('project/<int:p_id>/submit/', views.submit_project, name='submit_project'),
 ]

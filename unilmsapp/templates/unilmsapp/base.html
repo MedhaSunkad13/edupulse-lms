@@ -27,7 +27,8 @@
             <h4 class="text-center">EduPulse</h4>
             <p class="mb-3 text-center">A Learning Platform</p>
 
-            <a href="{% url 'student_dashboard' %}" class="d-block mb-2 {% if request.resolver_match.url_name == 'student_dashboard' %}active{% endif %}">
+            <a href="{% url 'student_dashboard' %}"
+                class="d-block mb-2 {% if request.resolver_match.url_name == 'student_dashboard' %}active{% endif %}">
                 <i class="fa-solid fa-house me-2"></i> Dashboard
             </a>
 

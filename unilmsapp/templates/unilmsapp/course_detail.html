@@ -5,71 +5,124 @@
 
 {% block content %}
 
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-danger">{{ message }}</div>
+{% endfor %}
+{% endif %}
+
 <div class="container-fluid py-4">
 
+    <!-- SUBJECT HEADER -->
+    <div class="p-4 rounded-4 mb-4 text-white" style="background: {{ subject.colour }};">
+        <h2 class="fw-bold">{{ subject.sub_name }}</h2>
+        <p class="mb-0">Faculty: {{ subject.faculty.name }}</p>
+    </div>
+
+    <!-- ================= COMBINED CONTENT (VIDEOS + PROJECTS) ================= -->
+    <h4 class="fw-bold mb-3">Course Content</h4>
+
+    {% if not materials and not projects %}
+    <p class="text-muted">No content available.</p>
+    {% endif %}
+
     <div class="row">
-        <div class="col-lg-12 px-4">
 
-            <!-- SUBJECT HEADER -->
-            <div class="p-4 rounded-4 mb-4 text-white" style="background: {{ subject.colour }};">
+        <!-- MATERIAL CARDS -->
+        {% for m in materials %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm rounded-4 h-100">
+                <div class="card-body">
 
-                <h2 class="fw-bold">{{ subject.sub_name }}</h2>
-                <p class="mb-0">Faculty: {{ subject.faculty.name }}</p>
+                    <h5 class="fw-bold">{{ m.title }}</h5>
+                    <p class="text-muted">{{ m.date }}</p>
 
+                    <div class="d-flex gap-2 text-center">
+                        {% if m.video_url %}
+                        <a href="{{ m.video_url }}" target="_blank" class="btn btn-primary rounded-pill">Watch</a>
+                        {% endif %}
+
+                        {% if m.notes %}
+                        <a href="{{ m.notes.url }}" target="_blank" class="btn btn-success rounded-pill">Notes</a>
+                        {% endif %}
+                    </div>
+                    <span class="badge bg-info mt-3">Material</span>
+                </div>
             </div>
+        </div>
+        {% endfor %}
 
-            <!-- TITLE -->
-            <h4 class="fw-bold mb-3">Course Materials</h4>
+        <!-- PROJECT CARDS -->
+        {% for p in projects %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm rounded-4 h-100">
+                <div class="card-body">
 
-            <!-- EMPTY STATE -->
-            {% if not materials %}
-            <p class="text-muted">No materials available for this course yet.</p>
-            {% endif %}
+                    <h5 class="fw-bold">{{ p.title }}</h5>
+                    <p class="text-muted">Deadline: {{ p.deadline }}</p>
+                    <p class="text-muted">{{ p.faculty }}</p>
 
-            <!-- MATERIALS LIST -->
-            <div class="row">
+                    <div class="text-center mt-3">
 
-                {% for m in materials %}
-                <div class="col-md-6 col-lg-4 mb-4">
-
-                    <div class="card shadow-sm rounded-4 h-100">
-
-                        <div class="card-body">
-
-                            <!-- TITLE -->
-                            <h5 class="fw-bold mb-2">{{ m.title }}</h5>
-
-                            <!-- DATE -->
-                            <p class="text-muted mb-3">
-                                {{ m.date }}
-                            </p>
-
-                            <!-- WATCH BUTTON -->
-                            {%if m.video_url%}
-                            <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ m.video_url }}" target="_blank" class="btn btn-primary rounded-pill px-3">
-                                    Watch <i class="fa-solid fa-play"></i>
-                                </a>
-                                {%endif%}
-
-                                <!-- Download PDF -->
-                                {%if m.notes %}
-                                <a href="{{m.notes.url}}" target="_blank" class="btn btn-success rounded-pill px-3">
-                                    Download Notes <i class="fa-solid fa-download"></i>
-                                </a>
-                            </div>
-                            {%endif%}
-
-                        </div>
+                        {% if p.project_id in submitted_project_ids %}
+                        <span class="badge bg-success p-2">
+                            Submitted ✔
+                        </span>
+                        {% else %}
+                        <a href="{% url 'submit_project' p.project_id %}" class="btn btn-primary rounded-pill">
+                            Submit Project
+                        </a>
+                        {% endif %}
 
                     </div>
 
-                </div>
-                {% endfor %}
+                    <span class="badge bg-warning mt-3">Project</span>
 
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <!-- ================= ASSIGNMENTS ================= -->
+    <h4 class="fw-bold mt-4 mb-3">Assignments</h4>
+
+    {% if not assignments %}
+    <p class="text-muted">No assignments available.</p>
+    {% endif %}
+
+    <div class="row">
+        {% for a in assignments %}
+        <div class="col-md-6 col-lg-4 mb-4">
+
+            <div class="card shadow-sm rounded-4 h-100">
+                <div class="card-body">
+
+                    <h5 class="fw-bold">{{ a.title }}</h5>
+                    <p class="text-muted">Due: {{ a.due_date }}</p>
+
+                    <div class="text-center mt-3">
+
+                        {% if a.assignment_id in submitted_ids %}
+                        <span class="badge bg-success p-2">
+                            Submitted ✔
+                        </span>
+                        {% else %}
+                        <a href="{% url 'submit_assignment' a.assignment_id %}" class="btn btn-primary rounded-pill">
+                            Submit Assignment
+                        </a>
+                        {% endif %}
+
+                    </div>
+
+                    <span class="badge bg-success mt-3">Assignment</span>
+
+                </div>
             </div>
 
         </div>
+        {% endfor %}
     </div>
 
 </div>

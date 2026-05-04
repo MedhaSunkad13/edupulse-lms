@@ -79,7 +79,8 @@ class Submission(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, null=True, blank=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     student = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    marks = models.FloatField()
+    marks = models.FloatField(null=True, blank=True)
+    file = models.FileField(upload_to='assignments/', null=True, blank=True)
     status = models.BooleanField(default=False)
     
 class Quiz(models.Model):

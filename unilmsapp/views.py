@@ -70,9 +70,103 @@ def course_detail(request, sc):
         messages.error(request, "You are not enrolled in this course")
         return redirect('my_courses')
 
+    # Materials
     materials = Material.objects.filter(sub=subject)
+
+    # Assignments
+    assignments = Assignment.objects.filter(sub=subject)
+
+    #Projects
+    projects = Project.objects.filter(sub=subject)
+
+    # Submissions of current user
+    submissions = Submission.objects.filter(student=request.user.profile)
+
+    # Extract assignment IDs
+    submitted_ids = []
+    for s in submissions:
+        submitted_ids.append(s.assignment.assignment_id)
+
+    #Extract project IDs
+    submitted_project_ids = []
+    for s in submissions:
+     if s.project:
+        submitted_project_ids.append(s.project.project_id)
 
     return render(request, 'unilmsapp/course_detail.html', {
         'materials': materials,
-        'subject': subject
+        'subject': subject,
+        'assignments': assignments,
+        'projects' : projects,
+        'submitted_ids': submitted_ids,
+        'submitted_project_ids' : submitted_project_ids,
+    })
+
+def submit_assignment(request, id):
+    curr_assignment = get_object_or_404(Assignment, assignment_id=id)
+
+    student = request.user.profile
+
+    has_submitted = Submission.objects.filter(
+        student=student,
+        assignment=curr_assignment
+    ).exists()
+
+    if has_submitted:
+        messages.error(request, "Already Submitted!")
+        return redirect('course_detail', curr_assignment.sub.sub_code)
+
+    if request.method == 'POST':
+        file = request.FILES['file']
+
+        Submission.objects.create(
+            student=student,
+            assignment=curr_assignment,
+            file=file,
+            status=True
+        )
+
+        messages.success(request, "Assignment submitted successfully!")
+        return redirect('course_detail', curr_assignment.sub.sub_code)
+
+    return render(request, 'unilmsapp/submit_assignment.html', {
+        'assignment': curr_assignment
+    })
+    
+def submit_project(request, p_id):
+    #Get Porject
+    project = get_object_or_404(Project, project_id=p_id)
+
+    #Get Student
+    student = request.user.profile
+
+    #Filter Submissions
+    has_submitted = Submission.objects.filter(
+        student = student,
+        project = project
+    ).exists()
+
+    if has_submitted:
+        messages.error(request, "Already Submitted!")
+        return redirect('course_detail', project.sub.sub_code)
+    
+    if request.method == "POST":
+        file = request.FILES['file']
+
+        if not file.name.lower().endswith(".zip"):
+            messages.error(request, "Only .zip files are allowed!")
+            return redirect('course_detail', project.sub.sub_code)
+
+        Submission.objects.create(
+            student = student,
+            project = project,
+            file = file,
+            status = True
+        )
+
+        messages.success(request, "Project submitted successfully!")
+        return redirect('course_detail', project.sub.sub_code)
+
+    return render(request, 'unilmsapp/submit_project.html', {
+        'project': project
     })
