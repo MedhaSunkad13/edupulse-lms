@@ -85,20 +85,45 @@ class Submission(models.Model):
     
 class Quiz(models.Model):
     q_id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=100)
     sub = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    duration = models.TimeField()
+    duration = models.IntegerField() 
     date = models.DateField()
 
+    def __str__(self):
+        return f"{self.title}"
+
+
+class Question(models.Model):
+    question_id = models.AutoField(primary_key=True)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    question_text = models.CharField(max_length=500)
+    option1 = models.CharField(max_length=100)
+    option2 = models.CharField(max_length=100)
+    option3 = models.CharField(max_length=100)
+    option4 = models.CharField(max_length=100)
+    # stores: 1 / 2 / 3 / 4
+    correct_answer = models.CharField(max_length=1)
+    marks = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.question_text}"
+
+
 class Result(models.Model):
+
     RESULT_CHOICES = [
         ('Pass', 'Pass'),
         ('Fail', 'Fail')
     ]
+
     res_id = models.AutoField(primary_key=True)
     student = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    sub = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    marks = models.FloatField()
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, null=True, blank=True)
+    obtained_marks = models.FloatField()
+    total_marks = models.FloatField()
     result = models.CharField(max_length=4, choices=RESULT_CHOICES)
+    attempted_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"{self.result}"
+        return f"{self.student.name} - {self.quiz.title}"

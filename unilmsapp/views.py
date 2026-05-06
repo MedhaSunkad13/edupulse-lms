@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect,  get_object_or_404
-from unilmsapp.models import Profile, Subject, Material, Enrollment, Quiz, Project, Submission, Assignment, Result
+from unilmsapp.models import Profile, Subject, Material, Enrollment, Quiz, Project, Submission, Assignment, Question, Result
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from django.contrib import messages
 
 # Create your views here.
@@ -71,16 +72,27 @@ def course_detail(request, sc):
         return redirect('my_courses')
 
     # Materials
-    materials = Material.objects.filter(sub=subject)
+    materials = Material.objects.filter(sub = subject)
 
     # Assignments
-    assignments = Assignment.objects.filter(sub=subject)
+    assignments = Assignment.objects.filter(sub = subject)
 
     #Projects
-    projects = Project.objects.filter(sub=subject)
+    projects = Project.objects.filter(sub = subject)
 
     # Submissions of current user
     submissions = Submission.objects.filter(student=request.user.profile)
+
+    # Results of current user
+    results = Result.objects.filter(student=request.user.profile)
+
+    #Quiz submission of curr user
+    quizzes = Quiz.objects.filter(sub = subject)
+
+    #Extract Quiz IDs
+    attempted_quiz_ids = []
+    for r in results:
+        attempted_quiz_ids.append(r.quiz.q_id)
 
     # Extract assignment IDs
     submitted_ids = []
@@ -98,6 +110,8 @@ def course_detail(request, sc):
         'subject': subject,
         'assignments': assignments,
         'projects' : projects,
+        'quizzes' : quizzes,
+        'attempted_quiz_ids' : attempted_quiz_ids,
         'submitted_ids': submitted_ids,
         'submitted_project_ids' : submitted_project_ids,
     })
@@ -169,4 +183,88 @@ def submit_project(request, p_id):
 
     return render(request, 'unilmsapp/submit_project.html', {
         'project': project
+    })
+
+def take_quiz(request, quiz_id):
+
+    quiz = get_object_or_404(Quiz, q_id=quiz_id)
+
+    # Current student
+    student = request.user.profile
+
+    # All questions of current quiz
+    questions = Question.objects.filter(quiz=quiz)
+
+    # Check if already attempted
+    has_attempted = Result.objects.filter(
+        student=student,
+        quiz=quiz
+    ).exists()
+
+    if has_attempted:
+        messages.error(request, "Already Attempted!")
+        return redirect('course_detail', quiz.sub.sub_code)
+    
+    today = timezone.now().date()
+
+    if quiz.date > today:
+        messages.error(request, "You cannot attempt the quiz today!")
+        return redirect('course_detail', quiz.sub.sub_code)
+
+    # ==================== GET ====================
+    if request.method == "GET":
+
+        return render(request, 'unilmsapp/show_quiz.html', {
+            'quiz': quiz,
+            'questions': questions
+        })
+
+    # ==================== POST ====================
+    else:
+
+        score = 0
+        tot_marks = 0
+
+        for question in questions:
+
+            # Add total marks
+            tot_marks += question.marks
+
+            # Get selected answer dynamically
+            selected_answer = request.POST.get(
+                f"question_{question.question_id}"
+            )
+
+            # Check answer
+            if selected_answer == question.correct_answer:
+                score += question.marks
+
+        # Calculate percentage
+        percentage = (score / tot_marks) * 100
+
+        # Pass / Fail
+        if percentage < 40:
+            result = "Fail"
+        else:
+            result = "Pass"
+
+        # Save result
+        quiz_result = Result.objects.create(
+            student=student,
+            quiz=quiz,
+            obtained_marks=score,
+            total_marks=tot_marks,
+            result=result
+        )
+
+        messages.success(request, "Quiz submitted successfully!")
+
+        return redirect('quiz_result', quiz_result.res_id)
+
+def quiz_result(request, result_id):
+
+    result = get_object_or_404(Result, res_id=result_id)
+
+    return render(request, 'unilmsapp/quiz_result.html', {
+        'result': result
     })

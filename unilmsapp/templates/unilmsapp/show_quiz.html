@@ -1,0 +1,141 @@
+{% extends 'unilmsapp/base.html' %}
+{% load static %}
+
+{% block title %}Take Quiz{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg rounded-4 border-0">
+
+                <!-- HEADER -->
+                <div class="card-header text-white rounded-top-4"
+                     style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+                    <h4 class="mb-0 fw-bold text-center text-dark">
+                        {{ quiz.title }}
+                    </h4>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <p class="fw-semibold">
+                            Subject: {{ quiz.sub.sub_name }}
+                        </p>
+
+                        <p class="fw-semibold text-danger">
+                            Duration: {{ quiz.duration }} mins
+                        </p>
+                    </div>
+
+                    <!-- QUIZ FORM -->
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        {% for question in questions %}
+
+                        <div class="card mb-4 shadow-sm border-0 rounded-4">
+
+                            <div class="card-body">
+
+                                <!-- QUESTION -->
+                                <h5 class="fw-bold mb-3">
+                                    Q{{ forloop.counter }}.
+                                    {{ question.question_text }}
+                                </h5>
+
+                                <!-- OPTION 1 -->
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="question_{{ question.question_id }}"
+                                           value="1">
+
+                                    <label class="form-check-label">
+                                        {{ question.option1 }}
+                                    </label>
+                                </div>
+
+                                <!-- OPTION 2 -->
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="question_{{ question.question_id }}"
+                                           value="2">
+
+                                    <label class="form-check-label">
+                                        {{ question.option2 }}
+                                    </label>
+                                </div>
+
+                                <!-- OPTION 3 -->
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="question_{{ question.question_id }}"
+                                           value="3">
+
+                                    <label class="form-check-label">
+                                        {{ question.option3 }}
+                                    </label>
+                                </div>
+
+                                <!-- OPTION 4 -->
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="question_{{ question.question_id }}"
+                                           value="4">
+
+                                    <label class="form-check-label">
+                                        {{ question.option4 }}
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        {% endfor %}
+
+                        <!-- BUTTONS -->
+                        <div class="d-flex justify-content-between">
+
+                            <a href="{% url 'course_detail' quiz.sub.sub_code %}"
+                               class="btn btn-light border rounded-pill px-4">
+                                ← Back
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-primary rounded-pill px-4 shadow-sm">
+                                Submit Quiz
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

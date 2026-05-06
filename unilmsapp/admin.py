@@ -1,5 +1,5 @@
 from django.contrib import admin
-from unilmsapp.models import Profile, Subject, Enrollment, Material, Submission, Project, Quiz, Assignment, Result
+from unilmsapp.models import Profile, Subject, Enrollment, Material, Submission, Project, Quiz, Assignment, Question, Result
 from django.utils.html import format_html
 
 # Register your models here.
@@ -60,12 +60,18 @@ admin.site.register(Submission, SubmissionAdmin)
 
 class QuizAdmin(admin.ModelAdmin):
 
-    list_display = ['q_id', 'sub', 'duration', 'date']
+    list_display = ['q_id', 'title', 'sub', 'duration', 'date']
 
 admin.site.register(Quiz, QuizAdmin)
 
+class QuestionAdmin(admin.ModelAdmin):
+
+    list_display = ['question_id', 'quiz', 'option1', 'option2', 'option3', 'option4', 'question_text', 'correct_answer', 'marks']
+
+admin.site.register(Question, QuestionAdmin)
+
 class ResultAdmin(admin.ModelAdmin):
 
-    list_display = ['res_id', 'student', 'sub', 'marks', 'result']
+    list_display = ['res_id', 'student', 'quiz', 'obtained_marks', 'total_marks', 'result', 'attempted_at']
 
 admin.site.register(Result, ResultAdmin)

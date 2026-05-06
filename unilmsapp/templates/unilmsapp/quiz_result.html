@@ -1,0 +1,121 @@
+{% extends 'unilmsapp/base.html' %}
+{% load static %}
+
+{% block title %}Quiz Result{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <!-- HEADER -->
+                <div class="card-header text-white text-center rounded-top-4"
+                     style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+                    <h3 class="fw-bold mb-0">
+                        Quiz Result
+                    </h3>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="card-body p-4">
+
+                    <div class="table-responsive">
+
+                        <table class="table align-middle text-center">
+
+                            <thead class="table-light">
+
+                                <tr>
+                                    <th>Quiz Title</th>
+                                    <th>Student</th>
+                                    <th>Marks Obtained</th>
+                                    <th>Total Marks</th>
+                                    <th>Result</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+
+                                    <td class="fw-semibold">
+                                        {{ result.quiz.title }}
+                                    </td>
+
+                                    <td>
+                                        {{ result.student.name }}
+                                    </td>
+
+                                    <td>
+                                        {{ result.obtained_marks }}
+                                    </td>
+
+                                    <td>
+                                        {{ result.total_marks }}
+                                    </td>
+
+                                    <td>
+
+                                        {% if result.result == "Pass" %}
+
+                                            <span class="badge bg-success px-3 py-2">
+                                                Pass ✔
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge bg-danger px-3 py-2">
+                                                Fail ✘
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <!-- BUTTON -->
+                    <div class="text-center mt-4">
+
+                        <a href="{% url 'course_detail' result.quiz.sub.sub_code %}"
+                           class="btn btn-primary rounded-pill px-4">
+
+                            Back to Course
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
