@@ -24,6 +24,9 @@ def profile_login(request):
 
     return render(request, 'unilmsapp/login.html')
 
+def profile_logout(request):
+    logout(request) #this clears session
+    return redirect('profile_login') #redirect back to login page
 
 @login_required
 def student_dashboard(request):
@@ -40,7 +43,74 @@ def student_dashboard(request):
     # print("Materials:", materials)
     # print(request.user)
     # print(request.user.profile)
-    return render(request, 'unilmsapp/student_dashboard.html', {'materials' : materials})
+
+    leaderboard = []
+
+    # Fetch only students
+    students = Profile.objects.filter(role="Student")
+
+    for s in students:
+
+        quiz_total = 0
+        assignment_total = 0
+        project_total = 0
+
+        # Fetch submissions
+        submissions = Submission.objects.filter(student=s)
+
+        for submission in submissions:
+
+            # Project Marks
+            if submission.project and submission.marks:
+                project_total += submission.marks
+
+            # Assignment Marks
+            if submission.assignment and submission.marks:
+                assignment_total += submission.marks
+
+        # Quiz marks
+        quiz_results = Result.objects.filter(student=s)
+
+        for q in quiz_results:
+            quiz_total += q.obtained_marks
+
+        # Total score
+        total_marks = (
+            project_total
+            + assignment_total
+            + quiz_total
+        )
+
+        # Create dictionary
+        student_data = {
+
+            'student': s,
+            'quiz_total': quiz_total,
+            'assignment_total': assignment_total,
+            'project_total': project_total,
+            'total_marks': total_marks
+
+        }
+
+        # Add into leaderboard
+        leaderboard.append(student_data)
+
+    # Sort descending
+    leaderboard.sort(
+        key=lambda x: x['total_marks'],
+        reverse=True
+    )
+
+    print(students)
+
+    return render(
+        request,
+        'unilmsapp/student_dashboard.html',
+        {
+            'leaderboard': leaderboard,
+            'materials' : materials
+        }
+    )
 
 def my_courses(request):
     curr_user = request.user
@@ -268,3 +338,7 @@ def quiz_result(request, result_id):
     return render(request, 'unilmsapp/quiz_result.html', {
         'result': result
     })
+
+# def student_leaderboard(request):
+
+    

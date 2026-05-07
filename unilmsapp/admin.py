@@ -4,6 +4,7 @@ from django.utils.html import format_html
 
 # Register your models here.
 class ProfileAdmin(admin.ModelAdmin):
+
     list_display= ['profile_id', 'name', 'address', 'dept', 'email', 'sem', 'role', 'profile_img_display']
 
     def profile_img_display(self, obj):
@@ -19,6 +20,25 @@ class SubjectAdmin(admin.ModelAdmin):
 
     list_display = ['sub_code', 'sub_name', 'faculty', 'colour', 'avatar_display']
 
+    def formfield_for_foreignkey(
+        self,
+        db_field,
+        request,
+        **kwargs
+    ):
+
+        if db_field.name == "faculty":
+
+            kwargs["queryset"] = Profile.objects.filter(
+                role="Faculty"
+            )
+
+        return super().formfield_for_foreignkey(
+            db_field,
+            request,
+            **kwargs
+        )
+
     def avatar_display(self, obj):
         if obj.faculty and obj.faculty.profile_img:
             return format_html('<img src="{}" width="30" height="30" />', obj.faculty.profile_img.url)
@@ -30,7 +50,31 @@ admin.site.register(Subject, SubjectAdmin)
 
 class EnrollmentAdmin(admin.ModelAdmin):
 
-    list_display = ['enroll_id', 'student_id', 'sub', 'date_enrolled']
+    list_display = [
+        'enroll_id',
+        'student_id',
+        'sub',
+        'date_enrolled'
+    ]
+
+    def formfield_for_foreignkey(
+        self,
+        db_field,
+        request,
+        **kwargs
+    ):
+
+        if db_field.name == "student_id":
+
+            kwargs["queryset"] = Profile.objects.filter(
+                role="Student"
+            )
+
+        return super().formfield_for_foreignkey(
+            db_field,
+            request,
+            **kwargs
+        )
 
 admin.site.register(Enrollment, EnrollmentAdmin)
 
@@ -43,6 +87,25 @@ admin.site.register(Material, MaterialAdmin)
 class ProjectAdmin(admin.ModelAdmin):
 
     list_display = ['project_id', 'title', 'description', 'sub', 'faculty', 'deadline', 'max_marks']
+
+    def formfield_for_foreignkey(
+        self,
+        db_field,
+        request,
+        **kwargs
+    ):
+
+        if db_field.name == "faculty":
+
+            kwargs["queryset"] = Profile.objects.filter(
+                role="Faculty"
+            )
+
+        return super().formfield_for_foreignkey(
+            db_field,
+            request,
+            **kwargs
+        )
 
 admin.site.register(Project, ProjectAdmin)
 

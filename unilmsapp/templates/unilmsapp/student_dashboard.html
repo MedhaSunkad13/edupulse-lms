@@ -107,9 +107,108 @@
                 </div>
 
                 <div class="mt-3">
-                    <p class="mb-1">Edit Profile</p>
-                    <p class="mb-0">Sign Out</p>
+
+                    <a href="" class="d-block text-white fw-semibold mb-2 text-decoration-none">
+                        Edit Profile
+                    </a>
+
+                    <a href="{% url 'profile_logout' %}" class="d-block text-white fw-semibold text-decoration-none">
+                        Sign Out
+                    </a>
+
                 </div>
+
+            </div>
+
+            <!-- LEADERBOARD -->
+            <div class="card border-0 shadow-sm rounded-4 mt-4 p-3">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <h5 class="fw-bold mb-0">
+                        Leaderboard
+                    </h5>
+
+                    <i class="fa-solid fa-trophy text-warning"></i>
+
+                </div>
+
+                {% for lb in leaderboard %}
+
+                <div class="d-flex align-items-center mb-4">
+
+                    <!-- PROFILE IMAGE -->
+                    <img src="{{ lb.student.profile_img.url }}" class="rounded-circle me-3" width="50" height="50"
+                        style="object-fit: cover;">
+
+                    <!-- DETAILS -->
+                    <div class="flex-grow-1">
+
+                        <div class="d-flex justify-content-between">
+
+                            <h6 class="fw-bold mb-1">
+                                {{ lb.student.name }}
+                            </h6>
+
+                            <!-- RANK -->
+                            <span class="
+                    {% if forloop.counter == 1 %}
+                        text-warning
+                    {% elif forloop.counter == 2 %}
+                        text-secondary
+                    {% elif forloop.counter == 3 %}
+                        text-danger
+                    {% endif %}
+                    fw-bold
+                ">
+
+                                #{{ forloop.counter }}
+
+                            </span>
+
+                        </div>
+
+                        <!-- MARKS -->
+                        <small class="text-muted">
+                            {{ lb.total_marks }} points
+                        </small>
+
+                        <!-- PROGRESS BAR -->
+                        <div class="progress mt-2 rounded-pill" style="height: 8px;">
+
+                            <div class="
+        progress-bar
+
+        {% if forloop.counter == 1 %}
+            bg-success
+
+        {% elif forloop.counter == 2 %}
+            bg-info
+
+        {% elif forloop.counter == 3 %}
+            bg-warning
+
+        {% else %}
+            bg-secondary
+
+        {% endif %}
+    " role="progressbar" style="width: {{ lb.total_marks }}%;">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <p class="text-muted text-center">
+                    No leaderboard data available
+                </p>
+
+                {% endfor %}
 
             </div>
 
