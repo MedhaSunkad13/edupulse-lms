@@ -119,7 +119,7 @@
 
                     <div class="avatar">
                         <img src="{% static 'images/teacher.png' %}">
-                        <a href="#">Teacher</a>
+                        <a href="{% url 'faculty_login' %}">Teacher</a>
                     </div>
 
                     <div class="avatar">
@@ -139,7 +139,9 @@
                 </div>
 
                 <div class="card-body mt-4">
-                    <form action="{% url 'profile_login' %}" method="POST" class="row g-3 needs-validation" novalidate>
+                    <form {% if login_type == "faculty" %} action="{% url 'faculty_login' %}" {% else %}
+                        action="{% url 'profile_login' %}" {% endif %} method="POST" class="row g-3 needs-validation"
+                        novalidate>
                         {% csrf_token %}
 
                         <div class="mb-3">

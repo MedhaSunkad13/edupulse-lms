@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect,  get_object_or_404
-from unilmsapp.models import Profile, Subject, Material, Enrollment, Quiz, Project, Submission, Assignment, Question, Result
+from unilmsapp.models import Profile, Subject, Material, Enrollment, Quiz, Project, Submission, Assignment, Question, Result, Announcement
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -22,7 +22,25 @@ def profile_login(request):
         else:
             return render(request, 'unilmsapp/login.html', {'error': "Invalid username or password"})
 
-    return render(request, 'unilmsapp/login.html')
+    return render(request, 'unilmsapp/login.html', {'login_type': 'student'})
+
+def faculty_login(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('pswd')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            if user.profile.role == "Faculty":
+                login(request, user)
+                return redirect('announcements')
+            else:
+                return render(request, 'unilmsapp/login.html', {'error': "Not a faculty account"})
+        else:
+            return render(request, 'unilmsapp/login.html', {'error': "Invalid username or password"})
+
+    return render(request, 'unilmsapp/login.html', {'login_type': 'faculty'})
 
 def profile_logout(request):
     logout(request) #this clears session
@@ -43,6 +61,8 @@ def student_dashboard(request):
     # print("Materials:", materials)
     # print(request.user)
     # print(request.user.profile)
+    
+    #------------Leaderboard-----------
 
     leaderboard = []
 
@@ -339,6 +359,130 @@ def quiz_result(request, result_id):
         'result': result
     })
 
-# def student_leaderboard(request):
+def announcements(request):
 
+    announcements = Announcement.objects.filter(
+        sender=request.user.profile
+    ).order_by('-timestamp')
+
+    return render(
+        request,
+        'unilmsapp/announcements.html',
+        {'announcements': announcements}
+    )
+
+
+def create_announcement(request):
+
+    subjects_taught = Subject.objects.filter(
+        faculty=request.user.profile
+    )
+
+    if request.method == "POST":
+
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+        subject = request.POST.get("subject")
+
+        curr_subject = Subject.objects.get(
+            sub_code=subject
+        )
+
+        Announcement.objects.create(
+            sender=request.user.profile,
+            subject=curr_subject,
+            title=title,
+            content=content,
+        )
+
+        return redirect('announcements')
+
+    return render(
+        request,
+        'unilmsapp/create_announcement.html',
+        {'subjects': subjects_taught}
+    )
+
+def edit_announcement(request, a_id):
+
+    curr_announcement = get_object_or_404(
+        Announcement,
+        announcement_id=a_id
+    )
+
+    if curr_announcement.sender != request.user.profile:
+        messages.error(request, "You cannot edit others announcement.")
+        return redirect('announcements')
+
+    subjects_taught = Subject.objects.filter(
+        faculty=request.user.profile
+    )
+
+    if request.method == "POST":
+
+        new_title = request.POST.get("title")
+        new_content = request.POST.get("content")
+        new_subject = request.POST.get("subject")
+
+        curr_subject = Subject.objects.get(
+            sub_code=new_subject
+        )
+
+        curr_announcement.title = new_title
+        curr_announcement.content = new_content
+        curr_announcement.subject = curr_subject
+
+        curr_announcement.save()
+
+        return redirect('announcements')
+
+    return render(
+        request,
+        'unilmsapp/edit_announcement.html',
+        {
+            'announcement': curr_announcement,
+            'subjects': subjects_taught
+        }
+    )
+
+def delete_announcement(request, a_id):
+    curr_announcement = get_object_or_404(
+        Announcement,
+        announcement_id=a_id
+    )
+
+    if curr_announcement.sender != request.user.profile:
+        messages.error(request, "You cannot delete others announcement.")
+        return redirect('announcements')
     
+    if request.method == "POST":
+        curr_announcement.delete()
+        messages.success(request, "Announcement deleted successfully.")
+        return redirect('announcements')
+    else:
+        return render(
+         request,
+            'unilmsapp/delete_announcement.html',
+            {'announcement': curr_announcement}
+        )
+    
+def student_announcements(request):
+
+    enrolled_subjects = Enrollment.objects.filter(
+        student_id=request.user.profile
+    )
+
+    subjects = []
+
+    for e in enrolled_subjects:
+        subjects.append(e.sub)
+
+    announcements = Announcement.objects.filter(
+        subject__in=subjects
+    ).order_by('-timestamp')
+
+    return render(
+        request,
+        'unilmsapp/student_announcement.html',
+        {'announcements': announcements}
+    )

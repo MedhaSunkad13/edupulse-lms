@@ -109,6 +109,16 @@ class Question(models.Model):
     def __str__(self):
         return f"{self.question_text}"
 
+class Announcement(models.Model):
+    announcement_id = models.AutoField(primary_key=True)
+    sender = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    content = models.CharField(max_length=150)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title}"
 
 class Result(models.Model):
 

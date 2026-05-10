@@ -1,0 +1,140 @@
+{% extends 'unilmsapp/base.html' %}
+{% load static %}
+
+{% block title %}Student Announcements{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Announcements
+            </h2>
+
+            <p class="text-muted mb-0">
+                Stay updated with the latest notices from your faculty.
+            </p>
+        </div>
+
+        <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center shadow-sm"
+             style="width: 65px; height: 65px;">
+
+            <i class="fa-solid fa-bullhorn fs-3"></i>
+
+        </div>
+
+    </div>
+
+    <!-- EMPTY STATE -->
+    {% if not announcements %}
+
+    <div class="card shadow-sm rounded-4 border-0 text-center p-5">
+
+        <div class="mb-3">
+
+            <i class="fa-solid fa-envelope-open-text text-primary"
+               style="font-size: 60px;">
+            </i>
+
+        </div>
+
+        <h4 class="fw-bold">
+            No Announcements Yet
+        </h4>
+
+        <p class="text-muted">
+            You don’t have any announcements at the moment.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+    <!-- ANNOUNCEMENT CARDS -->
+    <div class="row">
+
+        {% for a in announcements %}
+
+        <div class="col-lg-6 mb-4">
+
+            <div class="card shadow-sm rounded-4 border-0 h-100">
+
+                <div class="card-body p-4">
+
+                    <!-- TOP SECTION -->
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+
+                        <div>
+
+                            <h4 class="fw-bold mb-2">
+                                {{ a.title }}
+                            </h4>
+
+                            <span class="badge bg-primary rounded-pill px-3 py-2">
+                                {{ a.subject.sub_name }}
+                            </span>
+
+                        </div>
+
+                        <small class="text-muted">
+
+                            {{ a.timestamp|date:"M d, Y" }}
+
+                        </small>
+
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div class="mb-4">
+
+                        <p class="text-muted mb-0"
+                           style="line-height: 1.8;">
+
+                            {{ a.content }}
+
+                        </p>
+
+                    </div>
+
+                    <hr>
+
+                    <!-- FACULTY INFO -->
+                    <div class="d-flex align-items-center">
+
+                        <img src="{{ a.sender.profile_img.url }}"
+                             class="rounded-circle me-3"
+                             style="width: 50px;
+                                    height: 50px;
+                                    object-fit: cover;">
+
+                        <div>
+
+                            <h6 class="mb-0 fw-semibold">
+                                {{ a.sender.name }}
+                            </h6>
+
+                            <small class="text-muted">
+                                Faculty
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

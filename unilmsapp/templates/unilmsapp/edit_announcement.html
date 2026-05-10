@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Announcement</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="container-fluid py-4">
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-8">
+
+                <!-- HEADER CARD -->
+                <div class="card shadow-sm rounded-4 border-0 mb-4">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <div>
+                                <h3 class="fw-bold mb-1">
+                                    Edit Announcement
+                                </h3>
+
+                                <p class="text-muted mb-0">
+                                    Update announcement details for students.
+                                </p>
+                            </div>
+
+                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center"
+                                style="width: 60px; height: 60px;">
+
+                                <i class="fa-solid fa-bullhorn fs-4"></i>
+
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        <!-- FORM -->
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+                            <!-- TITLE -->
+                            <div class="mb-3">
+
+                                <label class="form-label fw-semibold">
+                                    Announcement Title
+                                </label>
+
+                                <input type="text" name="title" value="{{ announcement.title }}"
+                                    class="form-control rounded-3 p-3" placeholder="Enter title">
+
+                            </div>
+
+                            <!-- SUBJECT -->
+                            <div class="mb-3">
+
+                                <label class="form-label fw-semibold">
+                                    Subject
+                                </label>
+
+                                <select name="subject" class="form-select rounded-3 p-3">
+
+                                    {% for sub in subjects %}
+
+                                    <option value="{{ sub.sub_code }}" {% if sub == announcement.subject %} selected {% endif %}>
+
+                                        {{ sub.sub_name }}
+
+                                    </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                            <!-- CONTENT -->
+                            <div class="mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Content
+                                </label>
+
+                                <textarea name="content" rows="5" class="form-control rounded-3 p-3"
+                                    placeholder="Write announcement here...">{{ announcement.content }}</textarea>
+
+                            </div>
+
+                            <!-- BUTTONS -->
+                            <div class="d-flex gap-2">
+
+                                <button type="submit" class="btn btn-primary rounded-pill px-4">
+
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                    Save Changes
+
+                                </button>
+
+                                <a href="{% url 'announcements' %}" class="btn btn-light border rounded-pill px-4">
+
+                                    Cancel
+
+                                </a>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
