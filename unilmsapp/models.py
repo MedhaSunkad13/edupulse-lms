@@ -119,6 +119,25 @@ class Announcement(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+    
+class Events(models.Model):
+    EVENT_CHOICES = [
+        ('Quiz', 'Quiz'),
+        ('Assignment', 'Assignment'),
+        ('Project', 'Project'),
+        ('Holiday', 'Holiday')
+    ]
+
+    event_id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=50)
+    date = models.DateField()
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    color = models.CharField(max_length=10, default="#c084f5")
+    event_type = models.CharField(max_length=25, choices=EVENT_CHOICES)
+
+    def __str__(self):
+        return f"{self.title}"
+    
 
 class Result(models.Model):
 

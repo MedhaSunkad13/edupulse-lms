@@ -20,38 +20,50 @@
          style="background: {{ subject.colour }};">
 
         <h2 class="fw-bold">{{ subject.sub_name }}</h2>
-        <p class="mb-0">Faculty: {{ subject.faculty.name }}</p>
+
+        <p class="mb-0">
+            Faculty: {{ subject.faculty.name }}
+        </p>
 
     </div>
 
     <!-- ================= COURSE CONTENT ================= -->
-    <h4 class="fw-bold mb-3">Course Content</h4>
+    <h4 class="fw-bold mb-3 text-primary">
+        Course Content
+    </h4>
 
     {% if not materials and not projects %}
         <p class="text-muted">No content available.</p>
     {% endif %}
 
-    <div class="row">
+    <div class="row g-4">
 
         <!-- MATERIALS -->
         {% for m in materials %}
-        <div class="col-md-6 col-lg-4 mb-4">
 
-            <div class="card shadow-sm rounded-4 h-100">
+        <div class="col-md-6 col-lg-4">
 
-                <div class="card-body">
+            <div class="card shadow-sm rounded-4 border-0 h-100">
 
-                    <h5 class="fw-bold">{{ m.title }}</h5>
+                <div class="card-body d-flex flex-column">
 
-                    <p class="text-muted">{{ m.date }}</p>
+                    <h5 class="fw-bold">
+                        {{ m.title }}
+                    </h5>
 
-                    <div class="d-flex gap-2">
+                    <p class="text-muted">
+                        {{ m.date }}
+                    </p>
+
+                    <div class="d-flex gap-2 flex-wrap mb-3">
 
                         {% if m.video_url %}
                         <a href="{{ m.video_url }}"
                            target="_blank"
                            class="btn btn-primary rounded-pill">
+
                             Watch
+
                         </a>
                         {% endif %}
 
@@ -59,32 +71,42 @@
                         <a href="{{ m.notes.url }}"
                            target="_blank"
                            class="btn btn-success rounded-pill">
+
                             Notes
+
                         </a>
                         {% endif %}
 
                     </div>
 
-                    <span class="badge bg-info mt-3">
-                        Material
-                    </span>
+                    <div class="mt-auto">
+
+                        <span class="badge bg-info">
+                            Material
+                        </span>
+
+                    </div>
 
                 </div>
 
             </div>
 
         </div>
+
         {% endfor %}
 
         <!-- PROJECTS -->
         {% for p in projects %}
-        <div class="col-md-6 col-lg-4 mb-4">
 
-            <div class="card shadow-sm rounded-4 h-100">
+        <div class="col-md-6 col-lg-4">
 
-                <div class="card-body">
+            <div class="card shadow-sm rounded-4 border-0 h-100">
 
-                    <h5 class="fw-bold">{{ p.title }}</h5>
+                <div class="card-body d-flex flex-column">
+
+                    <h5 class="fw-bold">
+                        {{ p.title }}
+                    </h5>
 
                     <p class="text-muted">
                         Deadline: {{ p.deadline }}
@@ -94,130 +116,173 @@
                         {{ p.faculty }}
                     </p>
 
-                    <div class="text-center mt-3">
+                    <div class="mt-3 mb-3">
 
                         {% if p.project_id in submitted_project_ids %}
+
                             <span class="badge bg-success p-2">
                                 Submitted ✔
                             </span>
+
                         {% else %}
+
                             <a href="{% url 'submit_project' p.project_id %}"
                                class="btn btn-primary rounded-pill">
+
                                 Submit Project
+
                             </a>
+
                         {% endif %}
 
                     </div>
 
-                    <span class="badge bg-warning mt-3">
-                        Project
-                    </span>
+                    <div class="mt-auto">
+
+                        <span class="badge bg-warning text-dark">
+                            Project
+                        </span>
+
+                    </div>
 
                 </div>
 
             </div>
 
         </div>
+
         {% endfor %}
 
     </div>
 
     <!-- ================= QUIZZES ================= -->
-    <h4 class="fw-bold mt-4 mb-3">Quiz</h4>
+    <h4 class="fw-bold mt-5 mb-3 text-primary">
+        Quiz
+    </h4>
 
     {% if not quizzes %}
         <p class="text-muted">No quiz available.</p>
     {% endif %}
 
-    <div class="row">
+    <div class="row g-4">
 
         {% for q in quizzes %}
-        <div class="col-md-6 col-lg-4 mb-4">
 
-            <div class="card shadow-sm rounded-4 h-100">
+        <div class="col-md-6 col-lg-4">
 
-                <div class="card-body">
+            <div class="card shadow-sm rounded-4 border-0 h-100">
 
-                    <h5 class="fw-bold">{{ q.title }}</h5>
+                <div class="card-body d-flex flex-column">
+
+                    <h5 class="fw-bold">
+                        {{ q.title }}
+                    </h5>
 
                     <p class="text-muted">
                         Duration: {{ q.duration }} mins
                     </p>
 
-                    <div class="text-center mt-3">
+                    <div class="mt-3 mb-3">
 
                         {% if q.q_id in attempted_quiz_ids %}
+
                             <span class="badge bg-success p-2">
                                 Attempted ✔
                             </span>
+
                         {% else %}
+
                             <a href="{% url 'take_quiz' q.q_id %}"
                                class="btn btn-primary rounded-pill">
+
                                 Take Quiz
+
                             </a>
+
                         {% endif %}
 
                     </div>
 
-                    <span class="badge bg-secondary mt-3">
-                        Quiz
-                    </span>
+                    <div class="mt-auto">
+
+                        <span class="badge bg-secondary">
+                            Quiz
+                        </span>
+
+                    </div>
 
                 </div>
 
             </div>
 
         </div>
+
         {% endfor %}
 
     </div>
 
     <!-- ================= ASSIGNMENTS ================= -->
-    <h4 class="fw-bold mt-4 mb-3">Assignments</h4>
+    <h4 class="fw-bold mt-5 mb-3 text-primary">
+        Assignments
+    </h4>
 
     {% if not assignments %}
         <p class="text-muted">No assignments available.</p>
     {% endif %}
 
-    <div class="row">
+    <div class="row g-4">
 
         {% for a in assignments %}
-        <div class="col-md-6 col-lg-4 mb-4">
 
-            <div class="card shadow-sm rounded-4 h-100">
+        <div class="col-md-6 col-lg-4">
 
-                <div class="card-body">
+            <div class="card shadow-sm rounded-4 border-0 h-100">
 
-                    <h5 class="fw-bold">{{ a.title }}</h5>
+                <div class="card-body d-flex flex-column">
+
+                    <h5 class="fw-bold">
+                        {{ a.title }}
+                    </h5>
 
                     <p class="text-muted">
                         Due: {{ a.due_date }}
                     </p>
 
-                    <div class="text-center mt-3">
+                    <div class="mt-3 mb-3">
 
                         {% if a.assignment_id in submitted_ids %}
+
                             <span class="badge bg-success p-2">
                                 Submitted ✔
                             </span>
+
                         {% else %}
+
                             <a href="{% url 'submit_assignment' a.assignment_id %}"
                                class="btn btn-primary rounded-pill">
+
                                 Submit Assignment
+
                             </a>
+
                         {% endif %}
 
                     </div>
 
-                    <span class="badge bg-success mt-3">
-                        Assignment
-                    </span>
+                    <div class="mt-auto">
+
+                        <span class="badge bg-danger">
+                            Assignment
+                        </span>
+
+                    </div>
 
                 </div>
 
             </div>
 
         </div>
+
         {% endfor %}
 
     </div>

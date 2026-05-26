@@ -37,21 +37,68 @@
                 <i class="fa-solid fa-graduation-cap"></i> My Courses
             </a>
 
-            <a href="#" class="d-block mb-2">
+            <!-- <a href="#"
+                class=" {% if request.resolver_match.url_name == 'my_courses' %}active{% endif %} d-block mb-2">
                 <i class="fa-solid fa-clock me-2"></i> Lessons
-            </a>
+            </a> -->
 
-            <a href="{%url 'student_announcements' %}" class="d-block mb-2">
+            <a href="{%url 'student_announcements' %}"
+                class="{% if request.resolver_match.url_name == 'student_announcements' %}active{% endif %} d-block mb-2">
                 <i class="fa-solid fa-bullhorn me-2"></i> Announcements
             </a>
 
-            <a href="#" class="d-block mb-2">
-                <i class="fa-solid fa-calendar me-2"></i> Calendar
+            <a href="{% url 'student_events'%}"
+                class="{% if request.resolver_match.url_name == 'student_events' %}active{% endif %} d-block mb-2">
+                <i class="fa-solid fa-calendar me-2"></i> Events
             </a>
 
-            <a href="#" class="d-block mb-2">
-                <i class="fa-solid fa-gear me-2"></i> Settings
-            </a>
+            <!-- SETTINGS SECTION -->
+            <!-- SETTINGS -->
+            <div class="mt-3">
+
+                <!-- SETTINGS BUTTON -->
+                <button class="btn w-100 text-start d-flex align-items-center" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#settingsMenu" aria-expanded="false" style="border: none; background: transparent;">
+
+                    <h6 class=" mb-3 text-dark">
+
+                        <i class="fa-solid fa-gear me-2"></i>
+                        Settings
+
+                    </h6>
+
+                </button>
+
+                <!-- COLLAPSIBLE MENU -->
+                <div class="collapse mt-2" id="settingsMenu">
+
+                    <!-- EDIT PROFILE -->
+                    <a href="{% url 'edit_profile' %}" class="d-block text-decoration-none ps-4 mb-3">
+
+                        <i class="fa-solid fa-user me-2"></i>
+                        Edit Profile
+
+                    </a>
+
+                    <!-- CHANGE PASSWORD -->
+                    <a href="{% url 'change_password' %}" class="d-block text-decoration-none ps-4 mb-3">
+
+                        <i class="fa-solid fa-lock me-2"></i>
+                        Change Password
+
+                    </a>
+
+                    <!-- LOGOUT -->
+                    <a href="{% url 'profile_logout' %}" class="d-block text-decoration-none ps-4 text-danger">
+
+                        <i class="fa-solid fa-right-from-bracket me-2"></i>
+                        Logout
+
+                    </a>
+
+                </div>
+
+            </div>
 
         </div>
 

@@ -1,0 +1,152 @@
+{% extends 'unilmsapp/base.html' %}
+{% load static %}
+
+{% block title %}Upcoming Events{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                Upcoming Events
+            </h2>
+
+            <p class="text-muted mb-0">
+                Track quizzes, assignments, projects and important academic activities.
+            </p>
+
+        </div>
+
+        <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center shadow-sm"
+             style="width: 65px; height: 65px;">
+
+            <i class="fa-solid fa-calendar-days fs-3"></i>
+
+        </div>
+
+    </div>
+
+    <!-- EMPTY STATE -->
+    {% if not events %}
+
+    <div class="card shadow-sm rounded-4 border-0 text-center p-5">
+
+        <div class="mb-3">
+
+            <i class="fa-solid fa-calendar-xmark text-primary"
+               style="font-size: 60px;">
+            </i>
+
+        </div>
+
+        <h4 class="fw-bold">
+            No Upcoming Events
+        </h4>
+
+        <p class="text-muted">
+            There are no scheduled events for your enrolled subjects.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+    <!-- EVENTS TABLE -->
+    {% if events %}
+
+    <div class="card shadow-sm rounded-4 border-0">
+
+        <div class="card-body p-4">
+
+            <div class="table-responsive">
+
+                <table class="table align-middle table-hover">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>Date</th>
+                            <th>Event</th>
+                            <th>Subject</th>
+                            <th>Type</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for e in events %}
+
+                        <tr>
+
+                            <!-- DATE -->
+                            <td>
+
+                                <span class="fw-semibold">
+
+                                    {{ e.date }}
+
+                                </span>
+
+                            </td>
+
+                            <!-- TITLE -->
+                            <td>
+
+                                <div class="fw-semibold">
+
+                                    {{ e.title }}
+
+                                </div>
+
+                            </td>
+
+                            <!-- SUBJECT -->
+                            <td>
+
+                                <span class="badge bg-secondary rounded-pill px-3 py-2">
+
+                                    {{ e.subject.sub_name }}
+
+                                </span>
+
+                            </td>
+
+                            <!-- EVENT TYPE -->
+                            <td>
+
+                                <span class="badge rounded-pill px-3 py-2"
+                                      style="background: {{ e.color }};">
+
+                                    {{ e.event_type }}
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

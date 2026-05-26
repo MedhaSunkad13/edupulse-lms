@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect,  get_object_or_404
-from unilmsapp.models import Profile, Subject, Material, Enrollment, Quiz, Project, Submission, Assignment, Question, Result, Announcement
+from unilmsapp.models import Profile, Subject, Material, Enrollment, Quiz, Project, Submission, Assignment, Question, Result, Announcement, Events
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
 
 # Create your views here.
-def profile_login(request):
+def student_login(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('pswd')
@@ -44,7 +44,7 @@ def faculty_login(request):
 
 def profile_logout(request):
     logout(request) #this clears session
-    return redirect('profile_login') #redirect back to login page
+    return redirect('student_login') #redirect back to login page
 
 @login_required
 def student_dashboard(request):
@@ -486,3 +486,117 @@ def student_announcements(request):
         'unilmsapp/student_announcement.html',
         {'announcements': announcements}
     )
+
+def create_event(request):
+
+    subjects_taught = Subject.objects.filter(
+        faculty=request.user.profile
+    )
+
+    # ========== POST ==========
+    if request.method == "POST":
+
+        title = request.POST.get('title')
+        date = request.POST.get('date')
+        subject = request.POST.get('subject')
+        event_type = request.POST.get('event_type')
+
+        curr_subject = Subject.objects.get(
+            sub_code=subject
+        )
+
+        Events.objects.create(
+            title=title,
+            date=date,
+            subject=curr_subject,
+            event_type=event_type
+        )
+
+        return redirect('create_event')
+
+    # ========== GET ==========
+    return render(
+        request,
+        'unilmsapp/event_creation.html',
+        {'subjects_taught': subjects_taught}
+    )
+
+def display_events(request):
+
+    events = Events.objects.all().order_by('date')
+
+    return render(
+        request,
+        'unilmsapp/events.html',
+        {'events': events}
+    )
+
+def student_events(request):
+    enrolled_subjects = Enrollment.objects.filter(
+        student_id=request.user.profile
+    )
+
+    subjects = []
+    for e in enrolled_subjects:
+        subjects.append(e.sub)
+
+    events = Events.objects.filter(
+        subject__in = subjects
+    ).order_by('date')
+
+    return render(request, 'unilmsapp/view_events.html', {'events' : events})
+
+def edit_profile(request):
+
+    curr_user = request.user.profile
+
+    if request.method == "POST":
+
+        new_email = request.POST.get("email")
+        new_address = request.POST.get("address")
+        new_image = request.FILES.get("image")
+
+        curr_user.email = new_email
+        curr_user.address = new_address
+
+        if new_image:
+            curr_user.profile_img = new_image
+
+        curr_user.save()
+
+        return redirect('student_dashboard')
+
+    return render(request, 'unilmsapp/edit_profile.html', {
+        'curr_user': curr_user
+    })
+
+def change_password(request):
+
+    curr_user = request.user
+
+    if request.method == "POST":
+
+        old_password = request.POST.get("old_password")
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if curr_user.check_password(old_password):
+
+            if new_password == confirm_password:
+
+                curr_user.set_password(new_password)
+                curr_user.save()
+
+                messages.success(request, "Password changed successfully!")
+
+                return redirect('student_login')
+
+            else:
+                messages.error(request, "New password and confirm password must match!")
+
+        else:
+            messages.error(request, "Old password is incorrect!")
+
+    return render(request, "unilmsapp/change_password.html", {
+        'curr_user': curr_user
+    })

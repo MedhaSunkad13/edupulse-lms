@@ -3,7 +3,7 @@ from django.urls import path
 from unilmsapp import views
 
 urlpatterns = [
-    path('profile/login/', views.profile_login, name='profile_login'),
+    path('student/login/', views.student_login, name='student_login'),
     path('faculty/login/', views.faculty_login, name='faculty_login'),
     path('profile/logout/', views.profile_logout, name='profile_logout'),
     # path('dashboard/', TemplateView.as_view(template_name='unilmsapp/dashboard.html'), name='dashboard'),
@@ -19,5 +19,10 @@ urlpatterns = [
     path('edit-announcement/<int:a_id>/', views.edit_announcement, name='edit_announcement'),
     path('delete-announcement/<int:a_id>/', views.delete_announcement, name='delete_announcement'),
     path('student-announcement/', views.student_announcements, name='student_announcements'),
+    path('create-event/', views.create_event, name='create_event'),
+    path('events/', views.display_events, name='display_events'),
+    path('student-events/', views.student_events, name='student_events'),
+    path('edit/profile/', views.edit_profile, name='edit_profile'),
+    path('change/password/', views.change_password, name = 'change_password'),
     # path('leaderboard/', views.student_leaderboard, name='student_leaderboard'),
 ]

@@ -77,3 +77,21 @@ h4 {
     margin-left: 8px;
     cursor: pointer;
 }
+
+.settings-box{
+    background-color: #f8f5ff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.settings-link{
+    color: #2d2d2d;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.settings-link:hover{
+    background-color: #ece5ff;
+    color: #6a5af9;
+}
