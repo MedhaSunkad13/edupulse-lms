@@ -45,10 +45,11 @@ class Material(models.Model):
     title = models.CharField(max_length=50)
     video_url = models.URLField(null=True, blank=True)
     notes = models.FileField(upload_to='notes/', null=True, blank=True)
+    description = models.TextField(blank=True, null=True)
     sub = models.ForeignKey(Subject, on_delete=models.CASCADE)
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
-    date = models.DateField()
+    date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.title} {self.video_url}"
@@ -57,6 +58,11 @@ class Project(models.Model):
     project_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
+    project_file = models.FileField(
+        upload_to='project_files/',
+        blank=True,
+        null=True
+    )
     sub = models.ForeignKey(Subject, on_delete=models.CASCADE)
     faculty = models.ForeignKey(Profile, on_delete=models.CASCADE)
     deadline = models.DateField()
@@ -69,6 +75,15 @@ class Assignment(models.Model):
     assignment_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     sub = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    description = models.TextField(blank=True, null=True)
+    assignment_file = models.FileField(
+        upload_to='assignment_files/',
+        blank=True,
+        null=True
+    )
+    max_marks = models.FloatField(
+        default=10
+    )
     due_date = models.DateField()
 
     def __str__(self):
@@ -87,6 +102,12 @@ class Quiz(models.Model):
     q_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
     sub = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    faculty = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     duration = models.IntegerField() 
     date = models.DateField()
 

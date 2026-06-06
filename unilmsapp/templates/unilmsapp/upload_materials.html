@@ -1,0 +1,180 @@
+{% extends 'unilmsapp/teachers_base.html' %}
+{% load static %}
+
+{% block title %}Upload Materials{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold text-dark">
+                Upload Study Material
+            </h2>
+
+            <p class="text-muted mb-0">
+                Upload notes, PDFs and video resources for students
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- SUCCESS / ERROR MESSAGES -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm"
+                 role="alert">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <!-- FORM CARD -->
+    <div class="card border-0 shadow rounded-4">
+
+        <div class="card-body p-5">
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="row g-4">
+
+                    <!-- SUBJECT -->
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+
+                            Select Subject
+
+                        </label>
+
+                        <select name="subject"
+                                class="form-select rounded-3"
+                                required>
+
+                            <option value="">
+                                Choose Subject
+                            </option>
+
+                            {% for sub in my_subjects %}
+
+                                <option value="{{ sub.sub_code }}">
+
+                                    {{ sub.sub_name }} ({{ sub.sub_code }})
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                    <!-- TITLE -->
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+
+                            Material Title
+
+                        </label>
+
+                        <input type="text"
+                               name="title"
+                               class="form-control rounded-3"
+                               placeholder="Enter material title"
+                               required>
+
+                    </div>
+
+                    <!-- VIDEO LINK -->
+                    <div class="col-12">
+
+                        <label class="form-label fw-semibold">
+
+                            Video Link
+
+                        </label>
+
+                        <input type="url"
+                               name="video_url"
+                               class="form-control rounded-3"
+                               placeholder="Paste YouTube or lecture link">
+
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="col-12">
+
+                        <label class="form-label fw-semibold">
+
+                            Description
+
+                        </label>
+
+                        <textarea name="description"
+                                  rows="4"
+                                  class="form-control rounded-3"
+                                  placeholder="Enter short material description"></textarea>
+
+                    </div>
+
+                    <!-- NOTES FILE -->
+                    <div class="col-12">
+
+                        <label class="form-label fw-semibold">
+
+                            Upload Notes / PDF
+
+                        </label>
+
+                        <input type="file"
+                               name="notes"
+                               class="form-control rounded-3">
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTON -->
+                <div class="mt-5">
+
+                    <button type="submit"
+                            class="btn px-5 py-3 rounded-pill text-white fw-semibold"
+                            style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+                        <i class="fa-solid fa-upload me-2"></i>
+
+                        Upload Material
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

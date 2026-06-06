@@ -1,0 +1,193 @@
+{% extends 'unilmsapp/teachers_base.html' %}
+{% load static %}
+
+{% block title %}Create Assignment{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="mb-4">
+
+        <h2 class="fw-bold">
+            Create Assignment
+        </h2>
+
+        <p class="text-muted">
+            Create and publish assignments for students.
+        </p>
+
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-success alert-dismissible fade show">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <!-- FORM CARD -->
+    <div class="card border-0 shadow rounded-4">
+
+        <div class="card-header text-white fw-bold fs-4 rounded-top-4"
+             style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+            Assignment Details
+
+        </div>
+
+        <div class="card-body p-4">
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <!-- SUBJECT -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Subject
+
+                    </label>
+
+                    <select name="subject"
+                            class="form-select"
+                            required>
+
+                        <option value="">
+
+                            Select Subject
+
+                        </option>
+
+                        {% for sub in subjects %}
+
+                            <option value="{{ sub.sub_code }}">
+
+                                {{ sub.sub_name }} ({{ sub.sub_code }})
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- TITLE -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Assignment Title
+
+                    </label>
+
+                    <input type="text"
+                           name="title"
+                           class="form-control"
+                           placeholder="Enter assignment title"
+                           required>
+
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Description
+
+                    </label>
+
+                    <textarea name="description"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Enter assignment instructions"></textarea>
+
+                </div>
+
+                <!-- FILE -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Assignment File
+
+                    </label>
+
+                    <input type="file"
+                           name="file"
+                           class="form-control">
+
+                </div>
+
+                <!-- DUE DATE -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+
+                        Due Date
+
+                    </label>
+
+                    <input type="date"
+                           name="due_date"
+                           class="form-control"
+                           required>
+
+                </div>
+
+                <!-- MAX MARKS -->
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+
+                        Maximum Marks
+
+                    </label>
+
+                    <input type="number"
+                           name="max_marks"
+                           class="form-control"
+                           min="1"
+                           required>
+
+                </div>
+
+                <!-- SUBMIT BUTTON -->
+                <button type="submit"
+                        class="btn text-white px-4 py-2 rounded-pill"
+                        style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+                    <i class="fa-solid fa-plus me-2"></i>
+
+                    Create Assignment
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

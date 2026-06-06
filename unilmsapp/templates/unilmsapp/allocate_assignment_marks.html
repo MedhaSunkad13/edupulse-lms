@@ -1,0 +1,148 @@
+{% extends 'unilmsapp/teachers_base.html' %}
+{% load static %}
+
+{% block title %}Allocate Marks{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <!-- Messages -->
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="alert alert-success">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <div class="card-header text-white"
+                     style="background: linear-gradient(135deg,#6a5af9,#8b7bff);">
+
+                    <h4 class="mb-0">
+
+                        <i class="fa-solid fa-pen-to-square me-2"></i>
+                        Allocate Assignment Marks
+
+                    </h4>
+
+                </div>
+
+                <div class="card-body p-4">
+
+                    <!-- Student Info -->
+
+                    <div class="mb-4">
+
+                        <h5 class="fw-bold">
+
+                            {{ submission.student.name }}
+
+                        </h5>
+
+                        <p class="text-muted mb-1">
+
+                            Assignment:
+                            {{ submission.assignment.title }}
+
+                        </p>
+
+                        <p class="text-muted">
+
+                            Subject:
+                            {{ submission.assignment.sub.sub_name }}
+
+                        </p>
+
+                    </div>
+
+                    <!-- Download Submission -->
+
+                    {% if submission.file %}
+
+                    <div class="mb-4">
+
+                        <a href="{{ submission.file.url }}"
+                           target="_blank"
+                           class="btn btn-outline-primary">
+
+                            <i class="fa-solid fa-download me-2"></i>
+                            Download Submission
+
+                        </a>
+
+                    </div>
+
+                    {% endif %}
+
+                    <!-- Marks Form -->
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+
+                                Marks
+
+                            </label>
+
+                            <input
+                                type="number"
+                                name="marks"
+                                class="form-control"
+                                step="0.5"
+                                min="0"
+                                value="{{ submission.marks }}"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+
+                            <a href="{% url 'view_assignment_submissions' submission.assignment.assignment_id %}"
+                               class="btn btn-secondary">
+
+                                Back
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-success">
+
+                                <i class="fa-solid fa-check me-2"></i>
+                                Save Marks
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

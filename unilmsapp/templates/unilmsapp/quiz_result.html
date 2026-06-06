@@ -5,14 +5,6 @@
 
 {% block content %}
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-danger">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
-
 <div class="container py-5">
 
     <div class="row justify-content-center">
@@ -21,88 +13,110 @@
 
             <div class="card shadow-lg border-0 rounded-4">
 
-                <!-- HEADER -->
-                <div class="card-header text-white text-center rounded-top-4"
-                     style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+                <!-- Header -->
+                <div class="card-header text-center text-white py-4"
+                    style="background: linear-gradient(135deg,#6a5af9,#8b7bff);">
 
-                    <h3 class="fw-bold mb-0">
+                    <h2 class="mb-0">
+                        <i class="fa-solid fa-trophy me-2"></i>
                         Quiz Result
-                    </h3>
+                    </h2>
 
                 </div>
 
-                <!-- BODY -->
-                <div class="card-body p-4">
+                <!-- Body -->
+                <div class="card-body p-5">
 
-                    <div class="table-responsive">
+                    <div class="text-center mb-4">
 
-                        <table class="table align-middle text-center">
+                        {% if result.result == "Pass" %}
 
-                            <thead class="table-light">
+                        <i class="fa-solid fa-circle-check text-success"
+                            style="font-size:70px;"></i>
 
-                                <tr>
-                                    <th>Quiz Title</th>
-                                    <th>Student</th>
-                                    <th>Marks Obtained</th>
-                                    <th>Total Marks</th>
-                                    <th>Result</th>
-                                </tr>
+                        <h3 class="mt-3 text-success">
+                            Congratulations!
+                        </h3>
 
-                            </thead>
+                        {% else %}
 
-                            <tbody>
+                        <i class="fa-solid fa-circle-xmark text-danger"
+                            style="font-size:70px;"></i>
 
-                                <tr>
+                        <h3 class="mt-3 text-danger">
+                            Better Luck Next Time
+                        </h3>
 
-                                    <td class="fw-semibold">
-                                        {{ result.quiz.title }}
-                                    </td>
-
-                                    <td>
-                                        {{ result.student.name }}
-                                    </td>
-
-                                    <td>
-                                        {{ result.obtained_marks }}
-                                    </td>
-
-                                    <td>
-                                        {{ result.total_marks }}
-                                    </td>
-
-                                    <td>
-
-                                        {% if result.result == "Pass" %}
-
-                                            <span class="badge bg-success px-3 py-2">
-                                                Pass ✔
-                                            </span>
-
-                                        {% else %}
-
-                                            <span class="badge bg-danger px-3 py-2">
-                                                Fail ✘
-                                            </span>
-
-                                        {% endif %}
-
-                                    </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
+                        {% endif %}
 
                     </div>
 
-                    <!-- BUTTON -->
+                    <table class="table table-bordered align-middle">
+
+                        <tr>
+                            <th>Quiz</th>
+                            <td>{{ result.quiz.title }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Student</th>
+                            <td>{{ result.student.name }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Obtained Marks</th>
+                            <td>{{ result.obtained_marks }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Total Marks</th>
+                            <td>{{ result.total_marks }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Percentage</th>
+                            <td>
+                                {% widthratio result.obtained_marks result.total_marks 100 %}%
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Status</th>
+
+                            <td>
+
+                                {% if result.result == "Pass" %}
+
+                                <span class="badge bg-success fs-6">
+                                    PASS
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge bg-danger fs-6">
+                                    FAIL
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <th>Attempted At</th>
+                            <td>{{ result.attempted_at }}</td>
+                        </tr>
+
+                    </table>
+
                     <div class="text-center mt-4">
 
                         <a href="{% url 'course_detail' result.quiz.sub.sub_code %}"
-                           class="btn btn-primary rounded-pill px-4">
+                            class="btn btn-primary rounded-pill px-4">
 
-                            Back to Course
+                            <i class="fa-solid fa-arrow-left me-2"></i>
+                            Back To Course
 
                         </a>
 

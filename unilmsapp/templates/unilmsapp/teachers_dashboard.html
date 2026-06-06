@@ -1,0 +1,300 @@
+{% extends 'unilmsapp/teachers_base.html' %}
+{% load static %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- WELCOME SECTION -->
+    <div class="p-4 rounded-4 mb-4 text-white shadow"
+         style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+            <div>
+                <h2 class="fw-bold mb-2">
+                    Welcome Back, {{ curr_teacher.name }} 👋
+                </h2>
+
+                <p class="mb-0">
+                    Manage your subjects, assignments, quizzes and materials efficiently.
+                </p>
+            </div>
+
+            <div>
+                {% if curr_teacher.profile_img %}
+                <img src="{{ curr_teacher.profile_img.url }}"
+                     class="rounded-circle border border-4 border-white shadow"
+                     width="90"
+                     height="90"
+                     style="object-fit: cover;">
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- STATISTICS CARDS -->
+    <div class="row g-4 mb-4">
+
+        <!-- SUBJECTS -->
+        <div class="col-md-6 col-lg-3">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h6 class="text-muted">
+                                Subjects
+                            </h6>
+
+                            <h2 class="fw-bold">
+                                {{ total_subjects }}
+                            </h2>
+                        </div>
+
+                        <div class="fs-1 text-primary">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- MATERIALS -->
+        <div class="col-md-6 col-lg-3">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h6 class="text-muted">
+                                Materials
+                            </h6>
+
+                            <h2 class="fw-bold">
+                                {{ total_materials }}
+                            </h2>
+                        </div>
+
+                        <div class="fs-1 text-success">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ASSIGNMENTS -->
+        <div class="col-md-6 col-lg-3">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h6 class="text-muted">
+                                Assignments
+                            </h6>
+
+                            <h2 class="fw-bold">
+                                {{ total_assignments }}
+                            </h2>
+                        </div>
+
+                        <div class="fs-1 text-warning">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- QUIZZES -->
+        <div class="col-md-6 col-lg-3">
+
+            <div class="card border-0 shadow rounded-4 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h6 class="text-muted">
+                                Quizzes
+                            </h6>
+
+                            <h2 class="fw-bold">
+                                {{ total_quizzes }}
+                            </h2>
+                        </div>
+
+                        <div class="fs-1 text-danger">
+                            <i class="fa-solid fa-circle-question"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="card border-0 shadow rounded-4 p-4 mb-4">
+
+        <h4 class="fw-bold mb-4">
+            Quick Actions
+        </h4>
+
+        <div class="row g-3">
+
+            <div class="col-md-6 col-lg-3">
+
+                <a href="{% url 'upload_materials' %}"
+                   class="btn w-100 rounded-4 text-white py-3"
+                   style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+                    <i class="fa-solid fa-upload me-2"></i>
+                    Upload Material
+
+                </a>
+
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+
+                <a href="{% url 'create_assignment' %}"
+                   class="btn btn-success w-100 rounded-4 py-3">
+
+                    <i class="fa-solid fa-file-circle-plus me-2"></i>
+                    Create Assignment
+
+                </a>
+
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+
+                <a href="{% url 'create_quiz' %}"
+                   class="btn btn-warning w-100 rounded-4 py-3 text-white">
+
+                    <i class="fa-solid fa-pen me-2"></i>
+                    Create Quiz
+
+                </a>
+
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+
+                <a href="{% url 'create_project' %}"
+                   class="btn btn-dark w-100 rounded-4 py-3">
+
+                    <i class="fa-solid fa-diagram-project"></i>
+                    Create Project
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MY SUBJECTS -->
+    <div class="card border-0 shadow rounded-4 p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h4 class="fw-bold mb-0">
+                My Subjects
+            </h4>
+
+            <span class="badge bg-primary rounded-pill px-3 py-2">
+                {{ total_subjects }} Subjects
+            </span>
+
+        </div>
+
+        <div class="row g-4">
+
+            {% for sub in my_subjects %}
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                    <div class="card-body">
+
+                        <div class="mb-3">
+
+                            <span class="badge rounded-pill px-3 py-2 text-white"
+                                  style="background: {{ sub.colour }};">
+
+                                {{ sub.sub_code }}
+
+                            </span>
+
+                        </div>
+
+                        <h5 class="fw-bold">
+                            {{ sub.sub_name }}
+                        </h5>
+
+                        <!-- <p class="text-muted mb-2">
+                            Semester: {{ sub.sem }}
+                        </p> -->
+
+                        <p class="text-muted">
+                            Department: {{ curr_teacher.dept }}
+                        </p>
+
+                        <a href="{% url 'teacher_subjects' %}"
+                           class="btn btn-outline-primary rounded-pill px-4">
+
+                            View Subject
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,221 @@
+{% extends 'unilmsapp/teachers_base.html' %}
+{% load static %}
+
+{% block title %}Quiz Results{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+
+        <h2 class="fw-bold">
+            <i class="fa-solid fa-chart-column me-2"></i>
+            Quiz Results
+        </h2>
+
+        <p class="text-muted">
+            View student performance for this quiz.
+        </p>
+
+    </div>
+
+    <!-- Quiz Details Card -->
+    <div class="card shadow border-0 rounded-4 mb-4">
+
+        <div class="card-header text-white"
+             style="background: linear-gradient(135deg,#6a5af9,#8b7bff);">
+
+            <h4 class="mb-0">
+
+                {{ quiz.title }}
+
+            </h4>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <p>
+                        <strong>Subject:</strong>
+                        {{ quiz.sub.sub_name }}
+                    </p>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <p>
+                        <strong>Date:</strong>
+                        {{ quiz.date }}
+                    </p>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <p>
+                        <strong>Total Attempts:</strong>
+                        {{ results.count }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Results Table -->
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-header bg-success text-white">
+
+            <h5 class="mb-0">
+
+                Student Results
+
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            {% if results %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>#</th>
+                            <th>Student</th>
+                            <th>Obtained Marks</th>
+                            <th>Total Marks</th>
+                            <th>Percentage</th>
+                            <th>Result</th>
+                            <th>Attempted At</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for result in results %}
+
+                        <tr>
+
+                            <td>
+                                {{ forloop.counter }}
+                            </td>
+
+                            <td>
+
+                                {{ result.student.name }}
+
+                            </td>
+
+                            <td>
+
+                                {{ result.obtained_marks }}
+
+                            </td>
+
+                            <td>
+
+                                {{ result.total_marks }}
+
+                            </td>
+
+                            <td>
+
+                                {% widthratio result.obtained_marks result.total_marks 100 %}%
+
+                            </td>
+
+                            <td>
+
+                                {% if result.result == "Pass" %}
+
+                                <span class="badge bg-success">
+
+                                    PASS
+
+                                </span>
+
+                                {% else %}
+
+                                <span class="badge bg-danger">
+
+                                    FAIL
+
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {{ result.attempted_at }}
+
+                            </td>
+
+                            <td>
+
+                                <a href="#"
+                                   class="btn btn-sm btn-primary">
+
+                                    <i class="fa-solid fa-eye"></i>
+                                    View Answers
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="text-center py-5">
+
+                <i class="fa-solid fa-file-circle-xmark text-muted"
+                   style="font-size:60px;"></i>
+
+                <h5 class="mt-3 text-muted">
+
+                    No students have attempted this quiz yet
+
+                </h5>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,154 @@
+{% extends 'unilmsapp/teachers_base.html' %}
+{% load static %}
+
+{% block title %}Create Quiz{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+
+        <h2 class="fw-bold">
+            <i class="fa-solid fa-circle-question me-2"></i>
+            Create Quiz
+        </h2>
+
+        <p class="text-muted">
+            Create a new quiz and start adding questions.
+        </p>
+
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-success alert-dismissible fade show">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <!-- Quiz Form -->
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-header text-white fw-bold fs-5"
+             style="background: linear-gradient(135deg,#6a5af9,#8b7bff);">
+
+            Quiz Details
+
+        </div>
+
+        <div class="card-body p-4">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <!-- Quiz Title -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Quiz Title
+                    </label>
+
+                    <input type="text"
+                           name="title"
+                           class="form-control"
+                           placeholder="Enter quiz title"
+                           required>
+
+                </div>
+
+                <!-- Subject -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Subject
+                    </label>
+
+                    <select name="subject"
+                            class="form-select"
+                            required>
+
+                        <option value="">
+                            Select Subject
+                        </option>
+
+                        {% for sub in subjects %}
+
+                            <option value="{{ sub.sub_code }}">
+
+                                {{ sub.sub_name }}
+                                ({{ sub.sub_code }})
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- Duration -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Duration (Minutes)
+                    </label>
+
+                    <input type="number"
+                           name="duration"
+                           min="1"
+                           class="form-control"
+                           placeholder="Enter quiz duration"
+                           required>
+
+                </div>
+
+                <!-- Quiz Date -->
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+                        Quiz Date
+                    </label>
+
+                    <input type="date"
+                           name="date"
+                           class="form-control"
+                           required>
+
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit"
+                        class="btn text-white rounded-pill px-4"
+                        style="background: linear-gradient(135deg,#6a5af9,#8b7bff);">
+
+                    <i class="fa-solid fa-plus me-2"></i>
+
+                    Create Quiz
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

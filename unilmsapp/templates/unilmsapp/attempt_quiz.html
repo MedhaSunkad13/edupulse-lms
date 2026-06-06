@@ -1,0 +1,184 @@
+{% extends 'unilmsapp/base.html' %}
+{% load static %}
+
+{% block title %}Attempt Quiz{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- Quiz Header -->
+    <div class="card shadow border-0 rounded-4 mb-4">
+
+        <div class="card-header text-white"
+             style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+            <h3 class="mb-0">
+                <i class="fa-solid fa-circle-question me-2"></i>
+                {{ quiz.title }}
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <p class="mb-2">
+                <strong>Subject:</strong>
+                {{ quiz.sub.sub_name }}
+            </p>
+
+            <p class="mb-0">
+                <strong>Duration:</strong>
+                {{ quiz.duration }} Minutes
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Messages -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-info">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <!-- Quiz Form -->
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {% for question in questions %}
+
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+
+            <div class="card-body">
+
+                <h5 class="fw-bold">
+
+                    Q{{ forloop.counter }}.
+                    {{ question.question_text }}
+
+                </h5>
+
+                <span class="badge bg-primary mb-3">
+
+                    {{ question.marks }} Marks
+
+                </span>
+
+                <!-- Option 1 -->
+
+                <div class="form-check mb-2">
+
+                    <input class="form-check-input"
+                           type="radio"
+                           name="question_{{ question.question_id }}"
+                           value="1"
+                           required>
+
+                    <label class="form-check-label">
+
+                        {{ question.option1 }}
+
+                    </label>
+
+                </div>
+
+                <!-- Option 2 -->
+
+                <div class="form-check mb-2">
+
+                    <input class="form-check-input"
+                           type="radio"
+                           name="question_{{ question.question_id }}"
+                           value="2">
+
+                    <label class="form-check-label">
+
+                        {{ question.option2 }}
+
+                    </label>
+
+                </div>
+
+                <!-- Option 3 -->
+
+                <div class="form-check mb-2">
+
+                    <input class="form-check-input"
+                           type="radio"
+                           name="question_{{ question.question_id }}"
+                           value="3">
+
+                    <label class="form-check-label">
+
+                        {{ question.option3 }}
+
+                    </label>
+
+                </div>
+
+                <!-- Option 4 -->
+
+                <div class="form-check">
+
+                    <input class="form-check-input"
+                           type="radio"
+                           name="question_{{ question.question_id }}"
+                           value="4">
+
+                    <label class="form-check-label">
+
+                        {{ question.option4 }}
+
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="alert alert-warning">
+
+            No questions available for this quiz.
+
+        </div>
+
+        {% endfor %}
+
+        {% if questions %}
+
+        <div class="text-center">
+
+            <button type="submit"
+                    class="btn btn-success btn-lg rounded-pill px-5">
+
+                <i class="fa-solid fa-paper-plane me-2"></i>
+
+                Submit Quiz
+
+            </button>
+
+        </div>
+
+        {% endif %}
+
+    </form>
+
+</div>
+
+{% endblock %}

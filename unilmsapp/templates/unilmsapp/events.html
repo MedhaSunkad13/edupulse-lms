@@ -1,142 +1,129 @@
-{%load static%}
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'unilmsapp/teachers_base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upcoming Events</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+{% block title %}Events{% endblock %}
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
+{% block content %}
 
-<body>
-    <div class="container-fluid py-4">
+<div class="container-fluid py-4">
 
-        <!-- PAGE HEADER -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-            <div>
+        <div>
 
-                <h2 class="fw-bold mb-1">
-                    Upcoming Events
-                </h2>
+            <h2 class="fw-bold mb-1">
+                Upcoming Events
+            </h2>
 
-                <p class="text-muted mb-0">
-                    Stay updated with quizzes, assignments, projects and academic activities.
-                </p>
-
-            </div>
-
-            <!-- CREATE EVENT BUTTON -->
-            <a href="{% url 'create_event' %}" class="btn btn-primary rounded-pill px-4 shadow-sm">
-
-                <i class="fa-solid fa-plus"></i>
-                Create Event
-
-            </a>
-
-        </div>
-
-        <!-- EMPTY STATE -->
-        {% if not events %}
-
-        <div class="card shadow-sm rounded-4 border-0 text-center p-5">
-
-            <div class="mb-3">
-
-                <i class="fa-solid fa-calendar-xmark text-primary" style="font-size: 60px;">
-                </i>
-
-            </div>
-
-            <h4 class="fw-bold">
-                No Events Available
-            </h4>
-
-            <p class="text-muted">
-                No upcoming events have been scheduled yet.
+            <p class="text-muted mb-0">
+                Stay updated with quizzes, assignments, projects and academic activities.
             </p>
 
         </div>
 
-        {% endif %}
+        <!-- CREATE EVENT BUTTON -->
+        <a href="{% url 'create_event' %}" class="btn btn-primary rounded-pill px-4 shadow-sm">
 
-        <!-- EVENTS GRID -->
-        <div class="row">
+            <i class="fa-solid fa-plus"></i>
+            Create Event
 
-            {% for e in events %}
+        </a>
 
-            <div class="col-lg-6 mb-4">
+    </div>
 
-                <div class="card shadow-sm rounded-4 border-0 h-100">
+    <!-- EMPTY STATE -->
+    {% if not events %}
 
-                    <div class="card-body p-4">
+    <div class="card shadow-sm rounded-4 border-0 text-center p-5">
 
-                        <!-- TOP SECTION -->
-                        <div class="d-flex justify-content-between align-items-start mb-3">
+        <div class="mb-3">
 
-                            <div>
+            <i class="fa-solid fa-calendar-xmark text-primary" style="font-size: 60px;">
+            </i>
 
-                                <h4 class="fw-bold mb-2">
-                                    {{ e.title }}
-                                </h4>
+        </div>
 
-                                <span class="badge rounded-pill px-3 py-2" style="background: {{ e.color }};">
+        <h4 class="fw-bold">
+            No Events Available
+        </h4>
 
-                                    {{ e.event_type }}
+        <p class="text-muted">
+            No upcoming events have been scheduled yet.
+        </p>
 
-                                </span>
+    </div>
 
-                            </div>
+    {% endif %}
 
-                            <div class="text-muted small">
+    <!-- EVENTS GRID -->
+    <div class="row">
 
-                                <i class="fa-solid fa-calendar-days"></i>
-                                {{ e.date }}
+        {% for e in events %}
 
-                            </div>
+        <div class="col-lg-6 mb-4">
+
+            <div class="card shadow-sm rounded-4 border-0 h-100">
+
+                <div class="card-body p-4">
+
+                    <!-- TOP SECTION -->
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+
+                        <div>
+
+                            <h4 class="fw-bold mb-2">
+                                {{ e.title }}
+                            </h4>
+
+                            <span class="badge rounded-pill px-3 py-2" style="background: {{ e.color }};">
+
+                                {{ e.event_type }}
+
+                            </span>
 
                         </div>
 
-                        <!-- SUBJECT -->
-                        <div class="mb-3">
+                        <div class="text-muted small">
 
-                            <p class="mb-0 text-muted">
-
-                                <i class="fa-solid fa-book"></i>
-
-                                <span class="fw-semibold">
-                                    Subject:
-                                </span>
-
-                                {{ e.subject.sub_name }}
-
-                            </p>
+                            <i class="fa-solid fa-calendar-days"></i>
+                            {{ e.date }}
 
                         </div>
 
-                        <hr>
+                    </div>
 
-                        <!-- FOOTER -->
-                        <div class="d-flex justify-content-between align-items-center">
+                    <!-- SUBJECT -->
+                    <div class="mb-3">
 
-                            <small class="text-muted">
+                        <p class="mb-0 text-muted">
 
-                                Academic Event
+                            <i class="fa-solid fa-book"></i>
 
-                            </small>
+                            <span class="fw-semibold">
+                                Subject:
+                            </span>
 
-                            <div>
+                            {{ e.subject.sub_name }}
 
-                                <i class="fa-solid fa-clock text-primary"></i>
+                        </p>
 
-                            </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- FOOTER -->
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <small class="text-muted">
+
+                            Academic Event
+
+                        </small>
+
+                        <div>
+
+                            <i class="fa-solid fa-clock text-primary"></i>
 
                         </div>
 
@@ -146,14 +133,11 @@
 
             </div>
 
-            {% endfor %}
-
         </div>
 
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous"></script>
-</body>
+        {% endfor %}
 
-</html>
+    </div>
+
+</div>
+{%endblock%}

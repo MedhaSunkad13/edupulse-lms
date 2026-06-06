@@ -68,10 +68,18 @@
                                 ← Back
                             </a>
 
-                            <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
-                                Submit <i class="fa-solid fa-upload ms-1"></i>
-                            </button>
+                            {% if is_expired %}
 
+                                <button class="btn btn-danger" disabled>
+                                    Submission Closed
+                                </button>
+
+                                {% else %}
+
+                                <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
+                                    Submit <i class="fa-solid fa-upload ms-1"></i>
+                                </button>
+                            {%endif%}
                         </div>
 
                     </form>

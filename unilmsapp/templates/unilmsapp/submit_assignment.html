@@ -45,6 +45,16 @@
                         {{ assignment.description|default:"No description available" }}
                     </p>
 
+                    {% if assignment.file %}
+
+                    <a href="{{ assignment.file.url }}" class="btn btn-primary" target="_blank">
+
+                        Download Assignment PDF
+
+                    </a>
+
+                    {% endif %}
+
                     <!-- FORM -->
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -68,9 +78,19 @@
                                 ← Back
                             </a>
 
+                            {% if is_expired %}
+
+                            <button class="btn btn-danger" disabled>
+                                Submission Closed
+                            </button>
+
+                            {% else %}
+
                             <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">
                                 Submit <i class="fa-solid fa-upload ms-1"></i>
                             </button>
+
+                            {% endif %}
 
                         </div>
 

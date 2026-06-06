@@ -1,0 +1,186 @@
+{% extends 'unilmsapp/teachers_base.html' %}
+{% load static %}
+
+{% block title %}Create Project{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="mb-4">
+
+        <h2 class="fw-bold">
+            <i class="fa-solid fa-diagram-project me-2"></i>
+            Create Project
+        </h2>
+
+        <p class="text-muted">
+            Create project work and assign it to students.
+        </p>
+
+    </div>
+
+    <!-- SUCCESS MESSAGE -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-success alert-dismissible fade show">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+    <!-- FORM CARD -->
+    <div class="card border-0 shadow rounded-4">
+
+        <div class="card-header text-white fw-bold fs-4 rounded-top-4"
+             style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+            Project Details
+
+        </div>
+
+        <div class="card-body p-4">
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <!-- SUBJECT -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Subject
+                    </label>
+
+                    <select name="subject"
+                            class="form-select"
+                            required>
+
+                        <option value="">
+                            Select Subject
+                        </option>
+
+                        {% for sub in subjects %}
+
+                            <option value="{{ sub.sub_code }}">
+
+                                {{ sub.sub_name }}
+                                ({{ sub.sub_code }})
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- PROJECT TITLE -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Project Title
+                    </label>
+
+                    <input type="text"
+                           name="title"
+                           class="form-control"
+                           placeholder="Enter project title"
+                           required>
+
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Description
+                    </label>
+
+                    <textarea name="description"
+                              rows="5"
+                              class="form-control"
+                              placeholder="Enter project description"
+                              required></textarea>
+
+                </div>
+
+                <!-- PROJECT FILE -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Project Requirements PDF
+                    </label>
+
+                    <input type="file"
+                           name="file"
+                           class="form-control">
+
+                    <small class="text-muted">
+                        Upload project requirements or instructions.
+                    </small>
+
+                </div>
+
+                <!-- DEADLINE -->
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Deadline
+                    </label>
+
+                    <input type="date"
+                           name="deadline"
+                           class="form-control"
+                           required>
+
+                </div>
+
+                <!-- MAX MARKS -->
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+                        Maximum Marks
+                    </label>
+
+                    <input type="number"
+                           name="max_marks"
+                           min="1"
+                           class="form-control"
+                           required>
+
+                </div>
+
+                <!-- BUTTON -->
+                <button type="submit"
+                        class="btn text-white px-4 py-2 rounded-pill"
+                        style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+                    <i class="fa-solid fa-diagram-project me-2"></i>
+
+                    Create Project
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

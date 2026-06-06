@@ -1,0 +1,144 @@
+{% extends 'unilmsapp/teachers_base.html' %}
+{% load static %}
+
+{% block title %}My Subjects{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold text-dark">
+                My Subjects
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage your assigned subjects and course activities
+            </p>
+
+        </div>
+
+        <div>
+
+            <span class="badge rounded-pill px-4 py-3 bg-primary">
+
+                {{ my_subjects.count }} Subjects
+
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- SUBJECT CARDS -->
+    <div class="row g-4">
+
+        {% for sub in my_subjects %}
+
+        <div class="col-md-6 col-lg-4">
+
+            <div class="card border-0 shadow rounded-4 h-100 overflow-hidden">
+
+                <!-- TOP COLOR BAR -->
+                <div style="height: 8px;
+                            background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+                </div>
+
+                <div class="card-body p-4">
+
+                    <!-- SUBJECT CODE -->
+                    <div class="mb-3">
+
+                        <span class="badge rounded-pill px-3 py-2" style="background-color: #ede9ff;
+                                     color: #6a5af9;">
+
+                            {{ sub.sub_code }}
+
+                        </span>
+
+                    </div>
+
+                    <!-- SUBJECT NAME -->
+                    <h4 class="fw-bold mb-3">
+
+                        {{ sub.sub_name }}
+
+                    </h4>
+
+                    <!-- DETAILS -->
+                    <div class="mb-4">
+
+                        <p class="mb-2 text-muted">
+
+                            <i class="fa-solid fa-building me-2 text-primary"></i>
+
+                            {{ sub.faculty.dept }}
+
+                        </p>
+
+                    </div>
+
+                    <!-- ACTION BUTTONS -->
+                    <div class="d-grid gap-2">
+
+                        <!-- VIEW MATERIALS -->
+                        <a href="#" class="btn rounded-pill text-white"
+                            style="background: linear-gradient(135deg, #6a5af9, #8b7bff);">
+
+                            <i class="fa-solid fa-book-open me-2"></i>
+                            View Materials
+
+                        </a>
+
+                        <!-- VIEW SUBMISSIONS -->
+                        <a href="#" class="btn btn-outline-dark rounded-pill">
+
+                            <i class="fa-solid fa-users me-2"></i>
+                            View Submissions
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <!-- EMPTY STATE -->
+        <div class="col-12">
+
+            <div class="card border-0 shadow rounded-4 p-5 text-center">
+
+                <img src="{% static 'images/empty_subject.png' %}" width="120" class="mx-auto mb-4">
+
+                <h4 class="fw-bold text-muted">
+
+                    No Subjects Assigned Yet
+
+                </h4>
+
+                <p class="text-muted">
+
+                    Subjects assigned to you will appear here.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

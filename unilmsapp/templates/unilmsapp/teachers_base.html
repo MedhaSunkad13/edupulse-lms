@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
-        {% block title %}Student Dashboard{% endblock %}
+        {% block title %}Teacher Dashboard{% endblock %}
     </title>
 
     <!-- Bootstrap -->
@@ -34,7 +34,7 @@
                     position: fixed;
                     left: 0;
                     top: 0;
-                    background: linear-gradient(180deg, #6a5af9, #8b7bff);
+                    background: linear-gradient(180deg, #4e54c8, #8f94fb);
                     overflow-y: auto;">
 
             <!-- LOGO -->
@@ -45,32 +45,67 @@
                 </h3>
 
                 <p class="small">
-                    Student Portal
+                    Teacher Portal
                 </p>
 
             </div>
 
             <!-- DASHBOARD -->
-            <a href="{% url 'student_dashboard' %}"
-               class="sidebar-link d-block mb-2 {% if request.resolver_match.url_name == 'student_dashboard' %}active{% endif %}">
+            <a href="{% url 'teachers_dashboard' %}"
+               class="sidebar-link d-block mb-2 {% if request.resolver_match.url_name == 'teachers_dashboard' %}active{% endif %}">
 
-                <i class="fa-solid fa-house me-2"></i>
+                <i class="fa-solid fa-chart-line me-2"></i>
                 Dashboard
 
             </a>
 
-            <!-- MY COURSES -->
-            <a href="{% url 'my_courses' %}"
-               class="sidebar-link d-block mb-2 {% if request.resolver_match.url_name == 'my_courses' %}active{% endif %}">
+            <!-- MY SUBJECTS -->
+            <a href="{% url 'teacher_subjects' %}"
+               class="sidebar-link d-block mb-2">
 
-                <i class="fa-solid fa-graduation-cap me-2"></i>
-                My Courses
+                <i class="fa-solid fa-book me-2"></i>
+                My Subjects
 
             </a>
 
+            <!-- UPLOAD MATERIAL -->
+            <a href="{% url 'upload_materials' %}"
+               class="sidebar-link d-block mb-2">
+
+                <i class="fa-solid fa-upload me-2"></i>
+                Upload Material
+            </a>
+
+            <!-- ASSIGNMENTS -->
+            <a href="{% url 'create_assignment' %}"
+               class="sidebar-link d-block mb-2">
+
+                <i class="fa-solid fa-file-circle-plus me-2"></i>
+                Assignments
+
+            </a>
+
+            <!-- QUIZZES -->
+            <a href="{% url 'create_quiz' %}"
+               class="sidebar-link d-block mb-2">
+
+                <i class="fa-solid fa-circle-question me-2"></i>
+                Quizzes
+
+            </a>
+
+            <!-- SUBMISSIONS -->
+            <!-- <a href="#"
+               class="sidebar-link d-block mb-2">
+
+                <i class="fa-solid fa-users me-2"></i>
+                Student Submissions
+
+            </a> -->
+
             <!-- ANNOUNCEMENTS -->
-            <a href="{% url 'student_announcements' %}"
-               class="sidebar-link d-block mb-2 {% if request.resolver_match.url_name == 'student_announcements' %}active{% endif %}">
+            <a href="{% url 'announcements' %}"
+               class="sidebar-link d-block mb-2">
 
                 <i class="fa-solid fa-bullhorn me-2"></i>
                 Announcements
@@ -78,8 +113,8 @@
             </a>
 
             <!-- EVENTS -->
-            <a href="{% url 'student_events' %}"
-               class="sidebar-link d-block mb-3 {% if request.resolver_match.url_name == 'student_events' %}active{% endif %}">
+            <a href="{%url 'create_event' %}"
+               class="sidebar-link d-block mb-3">
 
                 <i class="fa-solid fa-calendar me-2"></i>
                 Events
