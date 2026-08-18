@@ -15,8 +15,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Font Awesome -->
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -28,8 +27,7 @@
     <div class="d-flex">
 
         <!-- SIDEBAR -->
-        <div class="sidebar text-white p-3"
-             style="width: 240px;
+        <div class="sidebar text-white p-3" style="width: 240px;
                     height: 100vh;
                     position: fixed;
                     left: 0;
@@ -52,7 +50,7 @@
 
             <!-- DASHBOARD -->
             <a href="{% url 'teachers_dashboard' %}"
-               class="sidebar-link d-block mb-2 {% if request.resolver_match.url_name == 'teachers_dashboard' %}active{% endif %}">
+                class="sidebar-link d-block mb-2 {% if request.resolver_match.url_name == 'teachers_dashboard' %}active{% endif %}">
 
                 <i class="fa-solid fa-chart-line me-2"></i>
                 Dashboard
@@ -60,25 +58,30 @@
             </a>
 
             <!-- MY SUBJECTS -->
-            <a href="{% url 'teacher_subjects' %}"
-               class="sidebar-link d-block mb-2">
+            <a href="{% url 'teacher_subjects' %}" class="sidebar-link d-block mb-2">
 
                 <i class="fa-solid fa-book me-2"></i>
                 My Subjects
 
             </a>
 
+            <!-- CREATE SUBJECT -->
+            <a href="{% url 'create_subject' %}" class="sidebar-link d-block mb-2">
+
+                <i class="fa-solid fa-book-medical me-2"></i>
+                Create Subject
+
+            </a>
+
             <!-- UPLOAD MATERIAL -->
-            <a href="{% url 'upload_materials' %}"
-               class="sidebar-link d-block mb-2">
+            <a href="{% url 'upload_materials' %}" class="sidebar-link d-block mb-2">
 
                 <i class="fa-solid fa-upload me-2"></i>
                 Upload Material
             </a>
 
             <!-- ASSIGNMENTS -->
-            <a href="{% url 'create_assignment' %}"
-               class="sidebar-link d-block mb-2">
+            <a href="{% url 'create_assignment' %}" class="sidebar-link d-block mb-2">
 
                 <i class="fa-solid fa-file-circle-plus me-2"></i>
                 Assignments
@@ -86,8 +89,7 @@
             </a>
 
             <!-- QUIZZES -->
-            <a href="{% url 'create_quiz' %}"
-               class="sidebar-link d-block mb-2">
+            <a href="{% url 'create_quiz' %}" class="sidebar-link d-block mb-2">
 
                 <i class="fa-solid fa-circle-question me-2"></i>
                 Quizzes
@@ -104,8 +106,7 @@
             </a> -->
 
             <!-- ANNOUNCEMENTS -->
-            <a href="{% url 'announcements' %}"
-               class="sidebar-link d-block mb-2">
+            <a href="{% url 'announcements' %}" class="sidebar-link d-block mb-2">
 
                 <i class="fa-solid fa-bullhorn me-2"></i>
                 Announcements
@@ -113,8 +114,7 @@
             </a>
 
             <!-- EVENTS -->
-            <a href="{%url 'create_event' %}"
-               class="sidebar-link d-block mb-3">
+            <a href="{%url 'create_event' %}" class="sidebar-link d-block mb-3">
 
                 <i class="fa-solid fa-calendar me-2"></i>
                 Events
@@ -125,12 +125,8 @@
             <div class="mt-3">
 
                 <!-- SETTINGS BUTTON -->
-                <button class="btn w-100 text-start text-white d-flex align-items-center"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#settingsMenu"
-                        aria-expanded="false"
-                        style="border: none;
+                <button class="btn w-100 text-start text-white d-flex align-items-center" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#settingsMenu" aria-expanded="false" style="border: none;
                                background: rgba(255,255,255,0.1);
                                border-radius: 12px;">
 
@@ -146,8 +142,8 @@
                 <div class="collapse mt-3" id="settingsMenu">
 
                     <!-- EDIT PROFILE -->
-                    <a href="{% url 'edit_profile' %}"
-                       class="sidebar-submenu d-block text-decoration-none ps-4 mb-3">
+                    <a href="{% url 'edit_profile_faculty' %}"
+                        class="sidebar-submenu d-block text-decoration-none ps-4 mb-3">
 
                         <i class="fa-solid fa-user me-2"></i>
                         Edit Profile
@@ -155,8 +151,8 @@
                     </a>
 
                     <!-- CHANGE PASSWORD -->
-                    <a href="{% url 'change_password' %}"
-                       class="sidebar-submenu d-block text-decoration-none ps-4 mb-3">
+                    <a href="{% url 'change_password_faculty' %}"
+                        class="sidebar-submenu d-block text-decoration-none ps-4 mb-3">
 
                         <i class="fa-solid fa-lock me-2"></i>
                         Change Password
@@ -165,7 +161,7 @@
 
                     <!-- LOGOUT -->
                     <a href="{% url 'profile_logout' %}"
-                       class="sidebar-submenu d-block text-decoration-none ps-4 text-warning">
+                        class="sidebar-submenu d-block text-decoration-none ps-4 text-warning">
 
                         <i class="fa-solid fa-right-from-bracket me-2"></i>
                         Logout
@@ -179,8 +175,7 @@
         </div>
 
         <!-- MAIN CONTENT -->
-        <div class="flex-grow-1"
-             style="margin-left: 240px;">
+        <div class="flex-grow-1" style="margin-left: 240px;">
 
             {% block content %}
             {% endblock %}

@@ -5,6 +5,7 @@ from unilmsapp import views
 urlpatterns = [
     path('student/login/', views.student_login, name='student_login'),
     path('faculty/login/', views.faculty_login, name='faculty_login'),
+    path('manager/login', views.manager_login, name='manager_login'),
     path('profile/logout/', views.profile_logout, name='profile_logout'),
     # path('dashboard/', TemplateView.as_view(template_name='unilmsapp/dashboard.html'), name='dashboard'),
     path('student/dashboard/', views.student_dashboard, name='student_dashboard'),
@@ -24,6 +25,7 @@ urlpatterns = [
     path('student-events/', views.student_events, name='student_events'),
     path('edit/profile/', views.edit_profile, name='edit_profile'),
     path('change/password/', views.change_password, name = 'change_password'),
+    path('my_results/', views.my_results, name='my_results'),
     # path('leaderboard/', views.student_leaderboard, name='student_leaderboard'),
 
     #Teachers Dashboard
@@ -39,5 +41,26 @@ urlpatterns = [
     path('view_assignment_submissions/<int:assignment_id>/', views.view_assignment_submissions, name='view_assignment_submissions'),
     path('allocate_assignment_marks/<int:submission_id>/', views.allocate_assignment_marks, name='allocate_assignment_marks'),
     path('view_project_submissions/<int:project_id>/', views.view_project_submissions, name='view_project_submissions'),
+    path('edit/profile/faculty', views.edit_profile_faculty, name='edit_profile_faculty'),
+    path('faculty/change-password/', views.change_password_faculty, name='change_password_faculty'),
+    path('create/subject/', views.create_subject, name='create_subject'),
+    
     # path('allocate_project_marks/<int:submission_id>/', views.allocate_project_marks, name='allocate_project_marks'),
+
+    #MANAGER
+    path('manager/dashboard/', views.manager_dashboard, name='manager_dashboard'),
+    path('manager/students/', views.manager_students, name='manager_students'),
+    path('manager/students/add/', views.add_student, name='add_student'),
+    path('manager/faculty/', views.manager_faculty, name='manager_faculty'),
+    path('manager/faculty/add/', views.add_faculty, name='add_faculty'),
+    path('manager/faculty/edit/<int:id>/', views.edit_faculty, name='edit_faculty'),
+    path('manager/faculty/delete/<int:id>/', views.delete_faculty, name='delete_faculty'),
+    path('manager/students/edit/<int:id>/', views.edit_student, name='edit_student'),
+    path('manager/students/delete/<int:id>/', views.delete_student, name='delete_student'),
+    path('manager/subjects/', views.manager_subjects, name='manager_subjects'),
+    path('manager/subjects/add/', views.manager_add_subject, name='manager_add_subject'),
+    path('manager/subjects/edit/<str:sub_code>/', views.manager_edit_subject, name='manager_edit_subject'),
+    path('manager/subjects/delete/<str:sub_code>/', views.manager_delete_subject, name='manager_delete_subject'),
+    path('manager/change-password/', views.manager_change_password, name='manager_change_password'),
+    path('manager/logout/', views.manager_logout, name='manager_logout'),
 ]

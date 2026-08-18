@@ -14,9 +14,13 @@
 
             <!-- SEARCH BAR -->
             <div class="mb-4">
-                <form class="d-flex rounded-4 bg-light p-2" style="max-width: 700px;">
+                <form method="GET" class="d-flex rounded-4 bg-light p-2">
+
                     <i class="fa-solid fa-magnifying-glass me-2 mt-2 text-muted"></i>
-                    <input class="form-control border-0 bg-light" type="search" placeholder="Search">
+
+                    <input class="form-control border-0 bg-light" type="search" name="search"
+                        value="{{ request.GET.search }}" placeholder="Search...">
+
                 </form>
             </div>
 

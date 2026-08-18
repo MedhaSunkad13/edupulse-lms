@@ -1,0 +1,95 @@
+{% extends 'unilmsapp/manager_base.html' %}
+
+{% block title %}Edit Faculty{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+        <h3 class="fw-bold">Edit Faculty</h3>
+        <p class="text-muted">
+            Update faculty information
+        </p>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+
+        <div class="card-body p-4">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Name
+                        </label>
+
+                        <input type="text"
+                               name="name"
+                               value="{{ faculty.name }}"
+                               class="form-control"
+                               required>
+
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input type="email"
+                               name="email"
+                               value="{{ faculty.email }}"
+                               class="form-control"
+                               required>
+
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Department
+                        </label>
+
+                        <input type="text"
+                               name="dept"
+                               value="{{ faculty.dept }}"
+                               class="form-control"
+                               required>
+
+                    </div>
+
+                </div>
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    <i class="fa-solid fa-save me-2"></i>
+                    Save Changes
+
+                </button>
+
+                <a href="{% url 'manager_faculty' %}"
+                   class="btn btn-secondary ms-2">
+
+                    Cancel
+
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

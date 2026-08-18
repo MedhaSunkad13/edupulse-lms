@@ -1,0 +1,93 @@
+{% extends 'unilmsapp/manager_base.html' %}
+
+{% block title %}
+Delete Subject
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+
+        <h2 class="fw-bold">
+            Delete Subject
+        </h2>
+
+        <p class="text-muted">
+            Confirm subject deletion
+        </p>
+
+    </div>
+
+
+    <div class="card shadow-sm border-0 rounded-4">
+
+        <div class="card-body p-4">
+
+            <div class="text-center">
+
+                <i class="fa-solid fa-triangle-exclamation text-danger fs-1 mb-3"></i>
+
+                <h4 class="fw-bold">
+                    Are you sure?
+                </h4>
+
+                <p class="text-muted">
+                    You are about to delete the following subject:
+                </p>
+
+
+                <div class="bg-light rounded-3 p-3 mb-4">
+
+                    <h5 class="fw-bold mb-1">
+                        {{ subject.sub_name }}
+                    </h5>
+
+                    <p class="mb-1">
+                        Subject Code:
+                        <strong>{{ subject.sub_code }}</strong>
+                    </p>
+
+                    <p class="mb-0">
+                        Faculty:
+                        <strong>{{ subject.faculty.name }}</strong>
+                    </p>
+
+                </div>
+
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger me-2">
+
+                        <i class="fa-solid fa-trash me-2"></i>
+
+                        Yes, Delete
+
+                    </button>
+
+
+                    <a
+                        href="{% url 'manager_subjects' %}"
+                        class="btn btn-secondary">
+
+                        Cancel
+
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends 'unilmsapp/manager_base.html' %}
+
+{% block title %}Add Faculty{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+        <h3 class="fw-bold">Add Faculty</h3>
+        <p class="text-muted">
+            Register a new faculty member
+        </p>
+    </div>
+
+
+    <div class="card shadow-sm border-0 rounded-4">
+
+        <div class="card-body p-4">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <!-- Username -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Username
+                        </label>
+
+                        <input type="text"
+                               name="username"
+                               class="form-control"
+                               required>
+
+                    </div>
+
+
+                    <!-- Password -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Password
+                        </label>
+
+                        <input type="password"
+                               name="password"
+                               class="form-control"
+                               required>
+
+                    </div>
+
+
+                    <!-- Name -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Full Name
+                        </label>
+
+                        <input type="text"
+                               name="name"
+                               class="form-control"
+                               required>
+
+                    </div>
+
+
+                    <!-- Email -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Email
+                        </label>
+
+                        <input type="email"
+                               name="email"
+                               class="form-control"
+                               required>
+
+                    </div>
+
+
+                    <!-- Department -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Department
+                        </label>
+
+                        <input type="text"
+                               name="dept"
+                               class="form-control"
+                               required>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mt-3">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="fa-solid fa-plus me-2"></i>
+                        Add Faculty
+
+                    </button>
+
+
+                    <a href="{% url 'manager_faculty' %}"
+                       class="btn btn-secondary ms-2">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

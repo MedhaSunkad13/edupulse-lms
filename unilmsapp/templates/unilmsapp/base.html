@@ -86,6 +86,15 @@
 
             </a>
 
+            <!-- EVENTS -->
+            <a href="{% url 'my_results' %}"
+               class="sidebar-link d-block mb-3 {% if request.resolver_match.url_name == 'my_results' %}active{% endif %}">
+
+                <i class="fa-solid fa-chart-line me-2"></i>
+                Results
+
+            </a>
+
             <!-- SETTINGS -->
             <div class="mt-3">
 

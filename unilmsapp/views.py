@@ -1,29 +1,65 @@
 from django.shortcuts import render, redirect,  get_object_or_404
 from unilmsapp.models import Profile, Subject, Material, Enrollment, Quiz, Project, Submission, Assignment, Question, Result, Announcement, Events
-from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import messages
 from datetime import date
 
 # Create your views here.
 def student_login(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('pswd')
 
-        user = authenticate(request, username=username, password=password)
+    if request.method == "POST":
+
+        username = request.POST.get("username")
+        password = request.POST.get("pswd")
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
 
         if user is not None:
-            if user.profile.role == "Student":
-                login(request, user)
-                return redirect('student_dashboard')
-            else:
-                return render(request, 'unilmsapp/login.html', {'error': "Not a student account"})
-        else:
-            return render(request, 'unilmsapp/login.html', {'error': "Invalid username or password"})
 
-    return render(request, 'unilmsapp/login.html', {'login_type': 'student'})
+            if hasattr(user, 'profile') and user.profile.role == "Student":
+
+                login(request, user)
+
+                return redirect('student_dashboard')
+
+            else:
+
+                return render(
+                    request,
+                    'unilmsapp/login.html',
+                    {
+                        'error': 'Not a student account',
+                        'login_type': 'student'
+                    }
+                )
+
+        else:
+
+            return render(
+                request,
+                'unilmsapp/login.html',
+                {
+                    'error': 'Invalid username or password',
+                    'login_type': 'student'
+                }
+            )
+
+    return render(
+        request,
+        'unilmsapp/login.html',
+        {
+            'login_type': 'student'
+        }
+    )
 
 def faculty_login(request):
     if request.method == "POST":
@@ -43,23 +79,90 @@ def faculty_login(request):
 
     return render(request, 'unilmsapp/login.html', {'login_type': 'faculty'})
 
+def manager_login(request):
+
+    if request.method == "POST":
+
+        username = request.POST.get('username')
+        password = request.POST.get('pswd')
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+
+        if user is not None:
+
+            # Manager can be Django admin/staff user
+            if user.is_staff or user.is_superuser:
+
+                login(request, user)
+
+                return redirect('manager_dashboard')
+
+            else:
+
+                return render(
+                    request,
+                    'unilmsapp/login.html',
+                    {
+                        'login_type': 'manager',
+                        'error': 'You are not authorized as a manager.'
+                    }
+                )
+
+        else:
+
+            return render(
+                request,
+                'unilmsapp/login.html',
+                {
+                    'login_type': 'manager',
+                    'error': 'Invalid username or password'
+                }
+            )
+
+    return render(
+        request,
+        'unilmsapp/login.html',
+        {
+            'login_type': 'manager'
+        }
+    )
+
 def profile_logout(request):
     logout(request) #this clears session
     return redirect('student_login') #redirect back to login page
 
 @login_required
 def student_dashboard(request):
+
     subjects = []
+
     curr_user = request.user
 
     if request.user.profile.role != "Student":
         return redirect('teachers_dashboard')
 
-    enrolled = Enrollment.objects.filter(student_id = curr_user.profile)
+    enrolled = Enrollment.objects.filter(
+        student_id=curr_user.profile
+    )
+
     for e in enrolled:
         subjects.append(e.sub)
 
-    materials = Material.objects.filter(sub__in = subjects)
+    search = request.GET.get("search")
+
+    if search:
+        materials = Material.objects.filter(
+            sub__in=subjects,
+            title__icontains=search
+        )
+    else:
+        materials = Material.objects.filter(
+            sub__in=subjects
+        )
 
     # print(materials.values())
     # print("Subjects:", subjects)
@@ -138,20 +241,46 @@ def student_dashboard(request):
     )
 
 def my_courses(request):
+
+    # Current logged-in user
     curr_user = request.user
 
-    enrollments = Enrollment.objects.filter(student_id = curr_user.profile)
+    # Fetch enrollments of the current student
+    enrollments = Enrollment.objects.filter(
+        student_id=curr_user.profile
+    )
 
+    # Store subjects
     subjects = []
 
     #Advanced version
-    #subjects = Subject.objects.filter(enrollment__student_id = curr_user.profile).distinct()
+        #subjects = Subject.objects.filter(enrollment__student_id = curr_user.profile).distinct()
 
+    # Get search text
+    search = request.GET.get("search")
+
+    # Search / display subjects
     for e in enrollments:
-        if e.sub not in subjects:
-            subjects.append(e.sub)
-    
-    return render(request, 'unilmsapp/courses.html', {'subjects' : subjects})
+
+        if search:
+
+            if search.lower() in e.sub.sub_name.lower():
+
+                if e.sub not in subjects:
+                    subjects.append(e.sub)
+
+        else:
+
+            if e.sub not in subjects:
+                subjects.append(e.sub)
+
+    return render(
+        request,
+        'unilmsapp/courses.html',
+        {
+            'subjects': subjects
+        }
+    )
 
 def course_detail(request, sc):
 
@@ -706,6 +835,28 @@ def change_password(request):
         'curr_user': curr_user
     })
 
+def my_results(request):
+    #Current logged in
+    student = request.user.profile
+
+    assignment_submissions = Submission.objects.filter(
+        student=student,
+        assignment__isnull=False,
+        marks__isnull=False,
+    )
+
+    project_submissions = Submission.objects.filter(
+        student=student,
+        project__isnull=False,
+        marks__isnull=False,
+    )
+
+    quiz_results = Result.objects.filter(
+        student=student
+    )
+
+    return render(request, 'unilmsapp/my_results.html', {'assignment_submissions' : assignment_submissions, 'project_submissions' : project_submissions, 'quiz_results': quiz_results})
+
                     # Teachers Dashboard
 
 @login_required
@@ -760,16 +911,24 @@ def teachers_dashboard(request):
 })
 
 def teacher_my_subjects(request):
+
     curr_logged_in = request.user.profile
 
-    my_subjects = Subject.objects.filter(faculty = curr_logged_in)
+    if curr_logged_in.role != "Faculty":
+        return redirect('student_dashboard')
 
-    return render(request, 'unilmsapp/my_subjects.html', {
+    my_subjects = Subject.objects.filter(
+        faculty=curr_logged_in
+    )
 
-        'curr_logged_in': curr_logged_in,
-        'my_subjects': my_subjects,
-
-    })
+    return render(
+        request,
+        'unilmsapp/my_subjects.html',
+        {
+            'curr_logged_in': curr_logged_in,
+            'my_subjects': my_subjects,
+        }
+    )
 
 def upload_materials(request):
 
@@ -1276,3 +1435,554 @@ def allocate_project_marks(request, submission_id):
             'submission': submission
         }
     )
+
+def edit_profile_faculty(request):
+
+    curr_user = request.user.profile
+
+    if request.method == "POST":
+
+        new_email = request.POST.get("email")
+        new_address = request.POST.get("address")
+        new_image = request.FILES.get("image")
+
+        curr_user.email = new_email
+        curr_user.address = new_address
+
+        if new_image:
+            curr_user.profile_img = new_image
+
+        curr_user.save()
+
+        return redirect('student_dashboard')
+
+    return render(request, 'unilmsapp/edit_profile_faculty.html', {
+        'curr_user': curr_user
+    })
+
+# def teacher_subjects(request):
+
+#     # Current logged-in user
+#     faculty = request.user.profile
+
+#     # Security Check
+#     if faculty.role != "Faculty":
+#         return redirect('student_dashboard')
+
+#     # Fetch subjects belonging to this faculty
+#     subjects = Subject.objects.filter(
+#         faculty=faculty
+#     )
+
+#     return render(
+#         request,
+#         'unilmsapp/teacher_subjects.html',
+#         {
+#             'subjects': subjects
+#         }
+#     )
+
+@login_required
+def create_subject(request):
+
+    faculty = request.user.profile
+
+    if faculty.role != "Faculty":
+        return redirect('student_dashboard')
+
+    if request.method == "POST":
+
+        sub_code = request.POST.get("sub_code")
+        sub_name = request.POST.get("sub_name")
+        colour = request.POST.get("colour")
+        avatar = request.FILES.get("avatar")
+
+        Subject.objects.create(
+            sub_code=sub_code,
+            sub_name=sub_name,
+            faculty=faculty,
+            colour=colour,
+            avatar=avatar
+        )
+
+        messages.success(
+            request,
+            "Subject created successfully!"
+        )
+
+        return redirect('teacher_subjects')
+
+    return render(
+        request,
+        'unilmsapp/create_subject.html',
+        {
+            'faculty': faculty
+        }
+    )
+
+def change_password_faculty(request):
+
+    curr_user = request.user
+
+    if request.method == "POST":
+
+        old_password = request.POST.get("old_password")
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if curr_user.check_password(old_password):
+
+            if new_password == confirm_password:
+
+                curr_user.set_password(new_password)
+                curr_user.save()
+
+                messages.success(request, "Password changed successfully!")
+
+                return redirect('student_login')
+
+            else:
+                messages.error(request, "New password and confirm password must match!")
+
+        else:
+            messages.error(request, "Old password is incorrect!")
+
+    return render(request, "unilmsapp/change_password_faculty.html", {
+        'curr_user': curr_user
+    })
+
+
+# MANAGER
+@login_required
+def manager_dashboard(request):
+
+    if not request.user.is_superuser:
+        return redirect('student_dashboard')
+
+    students = Profile.objects.filter(role="Student")
+    faculty = Profile.objects.filter(role="Faculty")
+    subjects = Subject.objects.all()
+
+    return render(
+        request,
+        'unilmsapp/manager_dashboard.html',
+        {
+            'students': students,
+            'faculty': faculty,
+            'subjects': subjects,
+        }
+    )
+
+@login_required
+def manager_students(request):
+
+    students = Profile.objects.filter(role="Student")
+
+    return render(
+        request,
+        'unilmsapp/manager_students.html',
+        {
+            'students': students
+        }
+    )
+
+@login_required
+def add_student(request):
+
+    if request.method == "POST":
+
+        name = request.POST.get("name")
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        dept = request.POST.get("dept")
+        sem = request.POST.get("sem")
+
+
+        # Check username already exists
+
+        if User.objects.filter(username=username).exists():
+
+            messages.error(
+                request,
+                "Username already exists."
+            )
+
+            return redirect('add_student')
+
+
+        # Check email already exists
+
+        if Profile.objects.filter(email=email).exists():
+
+            messages.error(
+                request,
+                "Email already exists."
+            )
+
+            return redirect('add_student')
+
+
+        # Create Django User
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+
+
+        # Create Profile
+
+        Profile.objects.create(
+            user=user,
+            name=name,
+            email=email,
+            dept=dept,
+            sem=sem,
+            role="Student"
+        )
+
+
+        messages.success(
+            request,
+            "Student added successfully."
+        )
+
+        return redirect('manager_students')
+
+
+    return render(
+        request,
+        'unilmsapp/add_student.html'
+    )
+
+@login_required
+def manager_faculty(request):
+
+    if not request.user.is_superuser:
+        return redirect('student_dashboard')
+
+    faculty = Profile.objects.filter(role="Faculty")
+
+    return render(
+        request,
+        'unilmsapp/manager_faculty.html',
+        {
+            'faculty': faculty
+        }
+    )
+
+@login_required
+def add_faculty(request):
+
+    # Manager is Django superuser
+    if not request.user.is_superuser:
+        return redirect('student_dashboard')
+
+    if request.method == "POST":
+
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        dept = request.POST.get('dept')
+
+        # Check username
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists.")
+            return redirect('add_faculty')
+
+        # Check email
+        if Profile.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists.")
+            return redirect('add_faculty')
+
+        # Create Django User
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+
+        # Create Faculty Profile
+        Profile.objects.create(
+            user=user,
+            name=name,
+            email=email,
+            dept=dept,
+            role="Faculty"
+        )
+
+        messages.success(
+            request,
+            "Faculty added successfully."
+        )
+
+        return redirect('manager_faculty')
+
+    return render(
+        request,
+        'unilmsapp/add_faculty.html'
+    )
+
+@login_required
+def edit_faculty(request, id):
+
+    profile = get_object_or_404(Profile, profile_id=id)
+
+    if request.method == 'POST':
+
+        profile.name = request.POST.get('name')
+        profile.email = request.POST.get('email')
+        profile.dept = request.POST.get('dept')
+
+        if request.FILES.get('profile_img'):
+            profile.profile_img = request.FILES.get('profile_img')
+
+        profile.save()
+
+        messages.success(request, "Faculty updated successfully.")
+
+        return redirect('manager_faculty')
+
+    return render(
+        request,
+        'unilmsapp/edit_faculty.html',
+        {
+            'faculty': profile
+        }
+    )
+
+@login_required
+def delete_faculty(request, id):
+
+    profile = get_object_or_404(Profile, profile_id=id)
+
+    user = profile.user
+
+    profile.delete()
+    user.delete()
+
+    messages.success(request, "Faculty deleted successfully.")
+
+    return redirect('manager_faculty')
+
+@login_required
+def edit_student(request, id):
+
+    student = get_object_or_404(
+        Profile,
+        profile_id=id,
+        role="Student"
+    )
+
+    if request.method == "POST":
+
+        student.name = request.POST.get('name')
+        student.email = request.POST.get('email')
+        student.address = request.POST.get('address')
+        student.dept = request.POST.get('dept')
+        student.sem = request.POST.get('sem')
+
+        student.save()
+
+        # Also update Django User email
+        student.user.email = student.email
+        student.user.save()
+
+        messages.success(request, "Student details updated successfully.")
+
+        return redirect('manager_students')
+
+    return render(
+        request,
+        'unilmsapp/edit_student.html',
+        {
+            'student': student
+        }
+    )
+
+@login_required
+def delete_student(request, id):
+
+    student = get_object_or_404(
+        Profile,
+        profile_id=id,
+        role="Student"
+    )
+
+    student.user.delete()
+
+    messages.success(request, "Student deleted successfully.")
+
+    return redirect('manager_students')
+
+@login_required(login_url='manager_login')
+def manager_subjects(request):
+
+    subjects = Subject.objects.all()
+
+    return render(
+        request,
+        'unilmsapp/manager_subjects.html',
+        {
+            'subjects': subjects
+        }
+    )
+
+@login_required(login_url='manager_login')
+def manager_add_subject(request):
+
+    faculty = Profile.objects.filter(role="Faculty")
+
+    if request.method == "POST":
+
+        sub_code = request.POST.get('sub_code')
+        sub_name = request.POST.get('sub_name')
+        faculty_id = request.POST.get('faculty')
+        colour = request.POST.get('colour')
+
+        faculty_obj = Profile.objects.get(profile_id=faculty_id)
+
+        Subject.objects.create(
+            sub_code=sub_code,
+            sub_name=sub_name,
+            faculty=faculty_obj,
+            colour=colour
+        )
+
+        return redirect('manager_subjects')
+
+    return render(
+        request,
+        'unilmsapp/add_subject.html',
+        {
+            'faculty': faculty
+        }
+    )
+
+@login_required(login_url='manager_login')
+def manager_edit_subject(request, sub_code):
+
+    subject = get_object_or_404(
+        Subject,
+        sub_code=sub_code
+    )
+
+    if request.method == "POST":
+
+        sub_name = request.POST.get("sub_name")
+        faculty_id = request.POST.get("faculty")
+
+        faculty = get_object_or_404(
+            Profile,
+            profile_id=faculty_id,
+            role="Faculty"
+        )
+
+        subject.sub_name = sub_name
+        subject.faculty = faculty
+
+        subject.save()
+
+        messages.success(
+            request,
+            "Subject updated successfully."
+        )
+
+        return redirect("manager_subjects")
+
+    faculty = Profile.objects.filter(
+        role="Faculty"
+    )
+
+    return render(
+        request,
+        "unilmsapp/manager_edit_subject.html",
+        {
+            "subject": subject,
+            "faculty": faculty
+        }
+    )
+
+@login_required(login_url='manager_login')
+def manager_delete_subject(request, sub_code):
+
+    subject = get_object_or_404(
+        Subject,
+        sub_code=sub_code
+    )
+
+    if request.method == "POST":
+
+        subject.delete()
+
+        messages.success(
+            request,
+            "Subject deleted successfully."
+        )
+
+        return redirect("manager_subjects")
+
+    return render(
+        request,
+        "unilmsapp/manager_delete_subject.html",
+        {
+            "subject": subject
+        }
+    )
+
+@login_required
+def manager_change_password(request):
+
+    if request.method == "POST":
+
+        form = PasswordChangeForm(
+            request.user,
+            request.POST
+        )
+
+        for field in form.fields.values():
+            field.widget.attrs.update({
+                'class': 'form-control'
+            })
+
+        if form.is_valid():
+
+            user = form.save()
+
+            update_session_auth_hash(
+                request,
+                user
+            )
+
+            messages.success(
+                request,
+                "Your password has been changed successfully."
+            )
+
+            return redirect("manager_dashboard")
+
+    else:
+
+        form = PasswordChangeForm(
+            request.user
+        )
+
+        for field in form.fields.values():
+            field.widget.attrs.update({
+                'class': 'form-control'
+            })
+
+    return render(
+        request,
+        "unilmsapp/manager_change_password.html",
+        {
+            "form": form
+        }
+    )
+
+def manager_logout(request):
+    logout(request)
+    return redirect('manager_login')

@@ -22,11 +22,16 @@
 
             <!-- SEARCH BAR -->
             <div class="mb-4">
-                <form class="d-flex rounded-4 bg-light p-2" style="max-width: 600px;">
+
+                <form method="GET" class="d-flex rounded-4 bg-light p-2" style="max-width: 600px;">
+
                     <i class="fa-solid fa-magnifying-glass me-2 mt-2 text-muted"></i>
-                    <input class="form-control border-0 bg-light" type="search"
-                        placeholder="Search courses, lessons...">
+
+                    <input class="form-control border-0 bg-light" type="search" name="search"
+                        value="{{ request.GET.search }}" placeholder="Search courses, lessons...">
+
                 </form>
+
             </div>
 
             <!-- TITLE -->
@@ -67,7 +72,8 @@
                                 {{ sub.faculty.name }}
                             </p>
 
-                            <a href="{% url 'course_detail' sub.sub_code%}" class="btn btn-outline-dark rounded-pill px-3">
+                            <a href="{% url 'course_detail' sub.sub_code%}"
+                                class="btn btn-outline-dark rounded-pill px-3">
                                 Go to Course →
                             </a>
 

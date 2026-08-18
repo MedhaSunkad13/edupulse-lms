@@ -1,0 +1,163 @@
+{% extends 'unilmsapp/teachers_base.html' %}
+{% load static %}
+
+{% block title %}Allocate Project Marks{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <!-- Messages -->
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="alert alert-success">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <div class="card-header text-white"
+                     style="background: linear-gradient(135deg,#6a5af9,#8b7bff);">
+
+                    <h4 class="mb-0">
+
+                        <i class="fa-solid fa-folder-open me-2"></i>
+                        Allocate Project Marks
+
+                    </h4>
+
+                </div>
+
+                <div class="card-body p-4">
+
+                    <!-- Student Info -->
+
+                    <div class="mb-4">
+
+                        <h5 class="fw-bold">
+
+                            {{ submission.student.name }}
+
+                        </h5>
+
+                        <p class="text-muted mb-1">
+
+                            <strong>Project:</strong>
+                            {{ submission.project.title }}
+
+                        </p>
+
+                        <p class="text-muted mb-1">
+
+                            <strong>Subject:</strong>
+                            {{ submission.project.sub.sub_name }}
+
+                        </p>
+
+                        <p class="text-muted">
+
+                            <strong>Maximum Marks:</strong>
+                            {{ submission.project.max_marks }}
+
+                        </p>
+
+                    </div>
+
+                    <!-- Download Project -->
+
+                    {% if submission.file %}
+
+                    <div class="mb-4">
+
+                        <a href="{{ submission.file.url }}"
+                           target="_blank"
+                           class="btn btn-outline-primary">
+
+                            <i class="fa-solid fa-download me-2"></i>
+                            Download ZIP File
+
+                        </a>
+
+                    </div>
+
+                    {% endif %}
+
+                    <!-- Marks Form -->
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-semibold">
+
+                                Marks Awarded
+
+                            </label>
+
+                            <input
+                                type="number"
+                                name="marks"
+                                class="form-control"
+                                step="0.5"
+                                min="0"
+                                max="{{ submission.project.max_marks }}"
+                                value="{{ submission.marks }}"
+                                required
+                            >
+
+                            <small class="text-muted">
+
+                                Maximum allowed:
+                                {{ submission.project.max_marks }}
+
+                            </small>
+
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+
+                            <a href="{% url 'view_project_submissions' submission.project.project_id %}"
+                               class="btn btn-secondary">
+
+                                Back
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-success">
+
+                                <i class="fa-solid fa-check me-2"></i>
+                                Save Marks
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
